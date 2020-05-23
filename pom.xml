@@ -60,9 +60,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:byakkili/B-IM.git</connection>
-        <developerConnection>scm:git@github.com:byakkili/B-IM.git</developerConnection>
         <url>git@github.com:byakkili/B-IM.git</url>
+        <connection>scm:git:git@github.com:byakkili/B-IM.git</connection>
+        <developerConnection>scm:git:git@github.com:byakkili/B-IM.git</developerConnection>
     </scm>
 
     <issueManagement>
