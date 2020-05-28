@@ -36,7 +36,7 @@ public class JsonUtils {
      * @param jsonStr JSON字符串
      * @return Map对象
      */
-    public static Map parseStr(String jsonStr) {
+    public static Map<?, ?> parseMap(String jsonStr) {
         try {
             return OBJECT_MAPPER.readValue(jsonStr, Map.class);
         } catch (IOException e) {
@@ -64,7 +64,7 @@ public class JsonUtils {
      * @param bytes 字节
      * @return Map对象
      */
-    public static Map deserialize(byte[] bytes) {
+    public static Map<?, ?> deserialize(byte[] bytes) {
         try {
             return OBJECT_MAPPER.readValue(bytes, Map.class);
         } catch (IOException e) {

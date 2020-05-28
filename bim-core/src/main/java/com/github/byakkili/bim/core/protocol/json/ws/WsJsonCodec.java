@@ -25,7 +25,7 @@ public class WsJsonCodec extends MessageToMessageCodec<TextWebSocketFrame, JsonM
     @Override
     protected void decode(ChannelHandlerContext ctx, TextWebSocketFrame msg, List<Object> out) {
         // 解析请求内容
-        out.add(JsonUtils.parseStr(msg.text()));
+        out.add(JsonUtils.parseMap(msg.text()));
     }
 
     @Override

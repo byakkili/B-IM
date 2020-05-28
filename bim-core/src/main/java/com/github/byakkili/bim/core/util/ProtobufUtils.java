@@ -2,7 +2,6 @@ package com.github.byakkili.bim.core.util;
 
 import cn.hutool.core.util.ReflectUtil;
 import com.google.protobuf.Message;
-import com.google.protobuf.MessageLite;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -15,30 +14,50 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProtobufUtils {
-
+    /**
+     * 方法缓存
+     */
     private static final Map<String, Method> METHOD_CACHE = new ConcurrentHashMap<>();
 
-    public static byte[] serialize(MessageLite messageLite) {
+    /**
+     * 序列化
+     *
+     * @param messageLite Protobuf对象
+     * @return 字节
+     */
+    public static byte[] serialize(Message messageLite) {
         return messageLite == null ? null : messageLite.toByteArray();
     }
 
+    /**
+     * 反序列化
+     *
+     * @param bytes 字节
+     * @param clazz Protobuf对象类型
+     * @param <T>   Protobuf对象类型
+     * @return Protobuf对象
+     */
     @SuppressWarnings("PrimitiveArrayArgumentToVarargsMethod")
-    public static <T extends Message> T deserialize(byte[] bytes, Class<T> requestClass) {
-        @SuppressWarnings("unchecked")
-        Class<Message> clazz = (Class<Message>) requestClass;
+    public static <T extends Message> T deserialize(byte[] bytes, Class<T> clazz) {
         Method method = getParseFormMethod(clazz);
         if (method == null) {
             return null;
         }
-        return ReflectUtil.invoke(null, method, bytes);
+        return ReflectUtil.invokeStatic(method, bytes);
     }
 
-
-    private static Method getParseFormMethod(Class<Message> clazz) {
+    /**
+     * 获取parseForm静态方法
+     *
+     * @param clazz Protobuf对象类型
+     * @param <T>   Protobuf对象类型
+     * @return parseForm方法
+     */
+    private static <T extends Message> Method getParseFormMethod(Class<T> clazz) {
         String className = clazz.getName();
         Method method = METHOD_CACHE.get(className);
         if (method == null) {
-            method = ReflectUtil.getMethod(clazz, "parseFrom", byte[].class);
+            method = ReflectUtil.getPublicMethod(clazz, "parseFrom", byte[].class);
             Method previousValue = METHOD_CACHE.putIfAbsent(className, method);
             if (previousValue != null) {
                 method = previousValue;
