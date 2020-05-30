@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.protocol.json.base;
+package com.github.byakkili.bim.core.protocol.impl.json;
 
 import java.io.Serializable;
 

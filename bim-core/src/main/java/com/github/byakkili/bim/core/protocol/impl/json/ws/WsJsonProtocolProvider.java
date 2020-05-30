@@ -1,7 +1,7 @@
-package com.github.byakkili.bim.core.protocol.protobuf.ws;
+package com.github.byakkili.bim.core.protocol.impl.json.ws;
 
 import com.github.byakkili.bim.core.protocol.BaseWsProtocolProvider;
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufCmdChannelHandler;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonCmdChannelHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  * @author Guannian Li
  */
 @EqualsAndHashCode(callSuper = true)
-public class WsProtobufProtocolProvider extends BaseWsProtocolProvider {
+public class WsJsonProtocolProvider extends BaseWsProtocolProvider {
     @Override
     public ChannelHandler[] channelHandlers() {
         return new ChannelHandler[]{
@@ -21,8 +21,8 @@ public class WsProtobufProtocolProvider extends BaseWsProtocolProvider {
                 new ChunkedWriteHandler(),
                 new HttpObjectAggregator(1024),
                 new WebSocketServerProtocolHandler("/ws", true),
-                WsProtobufCodec.INSTANCE,
-                ProtobufCmdChannelHandler.INSTANCE
+                WsJsonCodec.INSTANCE,
+                JsonCmdChannelHandler.INSTANCE
         };
     }
 }

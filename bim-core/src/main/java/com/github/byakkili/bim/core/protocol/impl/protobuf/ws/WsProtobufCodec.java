@@ -1,6 +1,6 @@
-package com.github.byakkili.bim.core.protocol.protobuf.ws;
+package com.github.byakkili.bim.core.protocol.impl.protobuf.ws;
 
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufFrame;
+import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufFrame;
 import com.github.byakkili.bim.core.util.ProtobufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;

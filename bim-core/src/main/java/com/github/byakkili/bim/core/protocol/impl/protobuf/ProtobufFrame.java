@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.protocol.protobuf;
+package com.github.byakkili.bim.core.protocol.impl.protobuf;
 
 import com.google.protobuf.Message;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.protocol.json.base;
+package com.github.byakkili.bim.core.protocol.impl.json;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.byakkili.bim.core.cmd.BaseCmdHandler;

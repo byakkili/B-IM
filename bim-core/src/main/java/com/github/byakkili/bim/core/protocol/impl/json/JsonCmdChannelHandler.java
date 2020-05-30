@@ -1,9 +1,8 @@
-package com.github.byakkili.bim.core.protocol.json;
+package com.github.byakkili.bim.core.protocol.impl.json;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import com.github.byakkili.bim.core.protocol.BaseCmdChannelHandler;
-import com.github.byakkili.bim.core.protocol.json.base.JsonMsg;
 import io.netty.channel.ChannelHandler.Sharable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

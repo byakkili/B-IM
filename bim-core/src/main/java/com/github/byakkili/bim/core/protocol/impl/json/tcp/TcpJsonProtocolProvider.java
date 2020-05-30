@@ -1,24 +1,24 @@
-package com.github.byakkili.bim.core.protocol.protobuf.tcp;
+package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.github.byakkili.bim.core.protocol.IProtocolProvider;
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufCmdChannelHandler;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonCmdChannelHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.EqualsAndHashCode;
 
 /**
- * +-------------+--------+--------+----------+
- * | 协议开始标志 |  长度  |  CMD   | protobuf |
- * +-------------+--------+--------+----------+
- * |    1 byte   | 4 byte | 4 byte |  n byte  |
- * +-------------+--------+--------+----------+
+ * +-------------+--------+--------+
+ * | 协议开始标志 |  长度  |  JSON  |
+ * +-------------+--------+--------+
+ * |    1 byte   | 4 byte | n byte |
+ * +-------------+--------+--------+
  *
  * @author Guannian Li
  */
 @EqualsAndHashCode
-public class TcpProtobufProtocolProvider implements IProtocolProvider {
+public class TcpJsonProtocolProvider implements IProtocolProvider {
     @Override
     public String name() {
         return "TCP";
@@ -28,7 +28,7 @@ public class TcpProtobufProtocolProvider implements IProtocolProvider {
     public boolean isProtocol(ByteBuf buffer) {
         buffer.markReaderIndex();
         try {
-            return ObjectUtil.equal(buffer.readByte(), TcpProtobufPacket.PROTOCOL_HEAD);
+            return ObjectUtil.equal(buffer.readByte(), TcpJsonPacket.PROTOCOL_HEAD);
         } finally {
             buffer.resetReaderIndex();
         }
@@ -37,10 +37,10 @@ public class TcpProtobufProtocolProvider implements IProtocolProvider {
     @Override
     public ChannelHandler[] channelHandlers() {
         return new ChannelHandler[]{
-                // 协议1位, 长度4位, cmd4位, protobuf n位
+                // 协议1位, 长度4位, Json bytes
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
-                TcpProtobufEncoder.INSTANCE,
-                ProtobufCmdChannelHandler.INSTANCE
+                TcpJsonCodec.INSTANCE,
+                JsonCmdChannelHandler.INSTANCE
         };
     }
 }

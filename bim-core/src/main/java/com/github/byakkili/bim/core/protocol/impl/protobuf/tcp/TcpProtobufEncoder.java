@@ -1,6 +1,6 @@
-package com.github.byakkili.bim.core.protocol.protobuf.tcp;
+package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufFrame;
+import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufFrame;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;

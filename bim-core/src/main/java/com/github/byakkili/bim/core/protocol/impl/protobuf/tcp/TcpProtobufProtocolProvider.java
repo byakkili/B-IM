@@ -1,24 +1,24 @@
-package com.github.byakkili.bim.core.protocol.json.tcp;
+package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.github.byakkili.bim.core.protocol.IProtocolProvider;
-import com.github.byakkili.bim.core.protocol.json.JsonCmdChannelHandler;
+import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufCmdChannelHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.EqualsAndHashCode;
 
 /**
- * +-------------+--------+--------+
- * | 协议开始标志 |  长度  |  JSON  |
- * +-------------+--------+--------+
- * |    1 byte   | 4 byte | n byte |
- * +-------------+--------+--------+
+ * +-------------+--------+--------+----------+
+ * | 协议开始标志 |  长度  |  CMD   | protobuf |
+ * +-------------+--------+--------+----------+
+ * |    1 byte   | 4 byte | 4 byte |  n byte  |
+ * +-------------+--------+--------+----------+
  *
  * @author Guannian Li
  */
 @EqualsAndHashCode
-public class TcpJsonProtocolProvider implements IProtocolProvider {
+public class TcpProtobufProtocolProvider implements IProtocolProvider {
     @Override
     public String name() {
         return "TCP";
@@ -28,7 +28,7 @@ public class TcpJsonProtocolProvider implements IProtocolProvider {
     public boolean isProtocol(ByteBuf buffer) {
         buffer.markReaderIndex();
         try {
-            return ObjectUtil.equal(buffer.readByte(), TcpJsonPacket.PROTOCOL_HEAD);
+            return ObjectUtil.equal(buffer.readByte(), TcpProtobufPacket.PROTOCOL_HEAD);
         } finally {
             buffer.resetReaderIndex();
         }
@@ -37,10 +37,10 @@ public class TcpJsonProtocolProvider implements IProtocolProvider {
     @Override
     public ChannelHandler[] channelHandlers() {
         return new ChannelHandler[]{
-                // 协议1位, 长度4位, Json bytes
+                // 协议1位, 长度4位, cmd4位, protobuf n位
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
-                TcpJsonCodec.INSTANCE,
-                JsonCmdChannelHandler.INSTANCE
+                TcpProtobufEncoder.INSTANCE,
+                ProtobufCmdChannelHandler.INSTANCE
         };
     }
 }

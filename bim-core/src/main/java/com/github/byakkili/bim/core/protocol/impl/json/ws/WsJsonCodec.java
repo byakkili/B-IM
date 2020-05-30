@@ -1,6 +1,6 @@
-package com.github.byakkili.bim.core.protocol.json.ws;
+package com.github.byakkili.bim.core.protocol.impl.json.ws;
 
-import com.github.byakkili.bim.core.protocol.json.base.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;

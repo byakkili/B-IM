@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.protocol.protobuf;
+package com.github.byakkili.bim.core.protocol.impl.protobuf;
 
 import com.github.byakkili.bim.core.protocol.BaseCmdChannelHandler;
 import com.github.byakkili.bim.core.util.ProtobufUtils;

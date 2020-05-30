@@ -1,6 +1,6 @@
-package com.github.byakkili.bim.core.protocol.json.tcp;
+package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
-import com.github.byakkili.bim.core.protocol.json.base.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;

@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageToMessageCodec<INBOUND, RESP> {
+public abstract class BaseCmdChannelHandler<INBOUND, REQUEST, RESPONSE> extends MessageToMessageCodec<INBOUND, RESPONSE> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseCmdChannelHandler.class);
 
     @Override
@@ -33,8 +33,8 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageT
             return;
         }
         @SuppressWarnings("unchecked")
-        Class<REQ> reqMsgClass = cmdHandler.reqMsgClass();
-        REQ reqMsg = convert(msg, reqMsgClass);
+        Class<REQUEST> reqMsgClass = cmdHandler.reqMsgClass();
+        REQUEST reqMsg = convert(msg, reqMsgClass);
 
         context.getSessionListener().onRead(reqMsg, session);
 
@@ -44,7 +44,7 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageT
                 return;
             }
             @SuppressWarnings("unchecked")
-            RESP respMsg = (RESP) cmdHandler.msgHandle(reqMsg, session);
+            RESPONSE respMsg = (RESPONSE) cmdHandler.msgHandle(reqMsg, session);
             applyPostHandle(cmd, session, respMsg);
 
             if (respMsg != null) {
@@ -59,7 +59,7 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageT
     }
 
     @Override
-    protected final void encode(ChannelHandlerContext ctx, RESP respMsg, List<Object> list) {
+    protected final void encode(ChannelHandlerContext ctx, RESPONSE respMsg, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
 
@@ -82,7 +82,7 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageT
      * @param targetClass 目标类型
      * @return 目标对象
      */
-    protected abstract REQ convert(INBOUND msg, Class<REQ> targetClass);
+    protected abstract REQUEST convert(INBOUND msg, Class<REQUEST> targetClass);
 
     /**
      * 前置处理

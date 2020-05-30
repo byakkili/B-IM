@@ -1,8 +1,7 @@
-package com.github.byakkili.bim.core.protocol.protobuf.base;
+package com.github.byakkili.bim.core.protocol.impl.protobuf;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.byakkili.bim.core.cmd.BaseCmdHandler;
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufFrame;
 import com.google.protobuf.Message;
 
 /**

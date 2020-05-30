@@ -1,9 +1,9 @@
-package com.github.byakkili.bim.core.protocol.protobuf.tcp;
+package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.github.byakkili.bim.core.protocol.protobuf.ProtobufFrame;
+import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufFrame;
 import com.github.byakkili.bim.core.util.ProtobufUtils;
 import lombok.Getter;
 import lombok.ToString;

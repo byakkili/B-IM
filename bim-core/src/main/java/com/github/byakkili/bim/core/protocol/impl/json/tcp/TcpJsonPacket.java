@@ -1,10 +1,10 @@
-package com.github.byakkili.bim.core.protocol.json.tcp;
+package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.github.byakkili.bim.core.protocol.json.base.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import lombok.Getter;
 
