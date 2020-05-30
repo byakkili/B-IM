@@ -41,4 +41,24 @@ public interface ISessionListener {
     default void onWriterIdle(BimSession session) {
         // ignore
     }
+
+    /**
+     * 读消息的通知回调
+     *
+     * @param msg     消息
+     * @param session 会话
+     */
+    default void onRead(Object msg, BimSession session) {
+        // ignore
+    }
+
+    /**
+     * 写消息的通知回调
+     *
+     * @param msg     消息
+     * @param session 会话
+     */
+    default void onWrite(Object msg, BimSession session) {
+        // ignore
+    }
 }

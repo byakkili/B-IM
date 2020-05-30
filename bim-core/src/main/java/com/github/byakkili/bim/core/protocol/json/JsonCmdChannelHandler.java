@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Sharable
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JsonCmdChannelHandler extends BaseCmdChannelHandler<Map, JsonMsg> {
+public class JsonCmdChannelHandler extends BaseCmdChannelHandler<Map, JsonMsg, JsonMsg> {
     /**
      * 单例
      */

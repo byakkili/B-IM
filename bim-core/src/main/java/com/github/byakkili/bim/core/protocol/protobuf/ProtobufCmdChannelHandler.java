@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
  */
 @Sharable
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProtobufCmdChannelHandler extends BaseCmdChannelHandler<ByteBuf, Message> {
+public class ProtobufCmdChannelHandler extends BaseCmdChannelHandler<ByteBuf, Message, ProtobufFrame> {
     /**
      * 单例
      */

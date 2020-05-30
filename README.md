@@ -57,6 +57,6 @@ compile 'com.github.byakkili:bim-core:0.0.2'
 ```
 
 ### 非Maven项目
-点击以下任一链接，下载`bim-core-X.X.X.jar`即可：
+点击以下任一链接，下载`bim-core-0.0.2.jar`即可：
 - [Maven中央库1](https://repo1.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)
 - [Maven中央库2](http://repo2.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)

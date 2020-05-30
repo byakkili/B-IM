@@ -7,7 +7,7 @@ import com.github.byakkili.bim.core.cmd.ICmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.MessageToMessageCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +17,11 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-public abstract class BaseCmdChannelHandler<I, T> extends SimpleChannelInboundHandler<I> {
+public abstract class BaseCmdChannelHandler<INBOUND, REQ, RESP> extends MessageToMessageCodec<INBOUND, RESP> {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseCmdChannelHandler.class);
 
     @Override
-    protected final void channelRead0(ChannelHandlerContext ctx, I msg) {
+    protected final void decode(ChannelHandlerContext ctx, INBOUND msg, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
         Map<Integer, ICmdHandler> cmdHandlers = context.getCmdHandlers();
@@ -33,17 +33,23 @@ public abstract class BaseCmdChannelHandler<I, T> extends SimpleChannelInboundHa
             return;
         }
         @SuppressWarnings("unchecked")
-        Object reqMsg = convert(msg, cmdHandler.reqMsgClass());
+        Class<REQ> reqMsgClass = cmdHandler.reqMsgClass();
+        REQ reqMsg = convert(msg, reqMsgClass);
+
+        context.getSessionListener().onRead(reqMsg, session);
+
         RuntimeException ex = null;
         try {
             if (!applyPreHandle(cmd, reqMsg, session)) {
                 return;
             }
-            Object respMsg = cmdHandler.msgHandle(reqMsg, session);
+            @SuppressWarnings("unchecked")
+            RESP respMsg = (RESP) cmdHandler.msgHandle(reqMsg, session);
+            applyPostHandle(cmd, session, respMsg);
+
             if (respMsg != null) {
                 session.writeAndFlush(respMsg);
             }
-            applyPostHandle(cmd, session, respMsg);
         } catch (RuntimeException e) {
             ex = e;
             throw e;
@@ -52,13 +58,22 @@ public abstract class BaseCmdChannelHandler<I, T> extends SimpleChannelInboundHa
         }
     }
 
+    @Override
+    protected final void encode(ChannelHandlerContext ctx, RESP respMsg, List<Object> list) {
+        BimSession session = BimSessionUtils.get(ctx.channel());
+        BimContext context = session.getContext();
+
+        context.getSessionListener().onWrite(respMsg, session);
+        list.add(respMsg);
+    }
+
     /**
      * 获取CMD
      *
      * @param msg 请求消息
      * @return CMD
      */
-    protected abstract Integer getCmd(I msg);
+    protected abstract Integer getCmd(INBOUND msg);
 
     /**
      * 类型转换
@@ -67,7 +82,7 @@ public abstract class BaseCmdChannelHandler<I, T> extends SimpleChannelInboundHa
      * @param targetClass 目标类型
      * @return 目标对象
      */
-    protected abstract T convert(I msg, Class<T> targetClass);
+    protected abstract REQ convert(INBOUND msg, Class<REQ> targetClass);
 
     /**
      * 前置处理
