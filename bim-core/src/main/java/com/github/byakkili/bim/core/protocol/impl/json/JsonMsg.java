@@ -10,7 +10,6 @@ public interface JsonMsg extends Serializable {
      * 字段名
      */
     String CMD_FIELD = "cmd";
-    String SEQ_FIELD = "seq";
 
     /**
      * Command
@@ -18,11 +17,4 @@ public interface JsonMsg extends Serializable {
      * @return CMD
      */
     Integer getCmd();
-
-    /**
-     * 消息序列, 区分每一次的请求
-     *
-     * @return Long
-     */
-    Long getSeq();
 }

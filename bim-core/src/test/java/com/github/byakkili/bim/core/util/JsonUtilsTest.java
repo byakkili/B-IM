@@ -23,7 +23,7 @@ public class JsonUtilsTest {
 
     @Test
     public void parseMap() {
-        Map<?, ?> map = JsonUtils.parseMap("{\"username\":\"admin\",\"password\":\"12345\"}");
+        Map map = JsonUtils.parse("{\"username\":\"admin\",\"password\":\"12345\"}", Map.class);
 
         Assert.assertEquals(MapUtil.getStr(map, "username"), "admin");
         Assert.assertEquals(MapUtil.getStr(map, "password"), "12345");
@@ -41,8 +41,8 @@ public class JsonUtilsTest {
     @Test
     public void deserialize() {
         String jsonStr = "{\"username\":\"admin\",\"password\":\"12345\"}";
-        Map<?, ?> map = JsonUtils.deserialize(jsonStr.getBytes());
+        Map map = JsonUtils.deserialize(jsonStr.getBytes(), Map.class);
 
-        Assert.assertEquals(map, JsonUtils.parseMap(jsonStr));
+        Assert.assertEquals(map, JsonUtils.parse(jsonStr, Map.class));
     }
 }

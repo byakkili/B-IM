@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Guannian Li
@@ -25,7 +26,7 @@ public class TcpJsonCodec extends MessageToMessageCodec<ByteBuf, JsonMsg> {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) {
-        out.add(JsonUtils.deserialize(ByteBufUtil.getBytes(buf)));
+        out.add(JsonUtils.deserialize(ByteBufUtil.getBytes(buf), Map.class));
     }
 
     @Override

@@ -12,7 +12,6 @@
     </parent>
 
     <artifactId>bim-spring-boot-starter</artifactId>
-    <version>${parent.version}</version>
 
     <name>${project.artifactId}</name>
     <description>IM SpringBoot 启动器</description>

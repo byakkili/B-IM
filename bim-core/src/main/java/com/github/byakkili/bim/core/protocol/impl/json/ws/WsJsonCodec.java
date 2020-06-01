@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Guannian Li
@@ -25,7 +26,7 @@ public class WsJsonCodec extends MessageToMessageCodec<TextWebSocketFrame, JsonM
     @Override
     protected void decode(ChannelHandlerContext ctx, TextWebSocketFrame msg, List<Object> out) {
         // 解析请求内容
-        out.add(JsonUtils.parseMap(msg.text()));
+        out.add(JsonUtils.parse(msg.text(), Map.class));
     }
 
     @Override

@@ -12,7 +12,6 @@
     </parent>
 
     <artifactId>bim-core</artifactId>
-    <version>${parent.version}</version>
 
     <name>${project.artifactId}</name>
     <description>IM 核心</description>

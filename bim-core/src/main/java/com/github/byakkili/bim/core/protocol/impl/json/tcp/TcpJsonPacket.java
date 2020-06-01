@@ -9,6 +9,7 @@ import com.github.byakkili.bim.core.util.JsonUtils;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Guannian Li
@@ -49,6 +50,6 @@ public class TcpJsonPacket implements Serializable {
 
     @Override
     public String toString() {
-        return StrUtil.format("{}(head={}, length={}, data={})", this.getClass().getSimpleName(), head, length, JsonUtils.deserialize(data));
+        return StrUtil.format("{}(head={}, length={}, data={})", this.getClass().getSimpleName(), head, length, JsonUtils.deserialize(data, Map.class));
     }
 }
