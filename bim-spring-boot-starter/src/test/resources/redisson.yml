@@ -1,0 +1,10 @@
+singleServerConfig:
+  address: redis://127.0.0.1:6379
+  password: 123456
+  database: 1
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: 10
+  connectionMinimumIdleSize: 1
+  connectionPoolSize: 10
+threads: 0
+nettyThreads: 4

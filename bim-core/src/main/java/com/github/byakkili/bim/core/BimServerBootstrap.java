@@ -19,6 +19,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Guannian Li
  */
@@ -58,8 +60,10 @@ public class BimServerBootstrap {
         bootstrap.childHandler(new ChannelInitializer<Channel>() {
             @Override
             protected void initChannel(Channel channel) {
+                if (readerTimeout != 0 || writerTimeout != 0) {
+                    channel.pipeline().addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0, TimeUnit.SECONDS));
+                }
                 channel.pipeline().addLast(TRACE_LOGGING_HANDLER);
-                channel.pipeline().addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0));
                 channel.pipeline().addLast(listenerHandler);
                 channel.pipeline().addLast(protocolDecoder);
             }

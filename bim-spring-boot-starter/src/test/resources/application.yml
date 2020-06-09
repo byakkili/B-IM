@@ -1,0 +1,8 @@
+bim:
+  port: 9001
+  reader-timeout: 60
+  writer-timeout: 60
+spring:
+  redis:
+    redisson:
+      config: classpath:redisson.yml

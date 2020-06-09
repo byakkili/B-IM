@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="https://weui.shanliwawa.top/css/weui.css"/>
+    <link rel="stylesheet" href="https://weui.shanliwawa.top/css/weuix.css"/>
+    <title>B-IM</title>
+    <style>
+        .weui-search-bar:before {
+            border-top: none;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="weui-tab">
+    <div class="login-page" v-if="!isLogin">
+        <div class="page-hd"></div>
+        <div class="page-hd"></div>
+        <div class="page-hd"></div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">Token</label>
+                </div>
+                <div class="weui-cell__bd weui-cell_primary">
+                    <input type="text" class="weui-input" placeholder="Token" v-model="token"/>
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" @click="login">登录</a>
+        </div>
+    </div>
+    <div class="main-page" v-show="isLogin">
+        <div v-show="!isChat">
+            <div class="weui-tab__panel">
+                <div class="weui-tab__content">
+                    <div class="weui-btn_default weui-header" style="background-color: #EFEFF4;">
+                        <h1 class="weui-header-title f-black">B-IM</h1>
+                        <div class="weui-header-right"><a class="icon icon-36 f-black"></a></div>
+                    </div>
+                    <div class="weui-search-bar">
+                        <form class="weui-search-bar__form">
+                            <div class="weui-search-bar__box">
+                                <i class="weui-icon-search"></i>
+                                <input class="weui-search-bar__input" placeholder="搜索" type="search">
+                                <a href="javascript:" class="weui-icon-clear"></a>
+                            </div>
+                            <label class="weui-search-bar__label">
+                                <i class="weui-icon-search"></i>
+                                <span>搜索</span>
+                            </label>
+                        </form>
+                        <a href="javascript:" class="weui-search-bar__cancel-btn">取消</a>
+                    </div>
+                    <div class="weui-cells" style="margin-top: 0;">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                                <img src="https://weui.shanliwawa.top/images/pic_160.png"
+                                     style="width: 50px;display: block">
+                                <span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>联系人名称</p>
+                                <p style="font-size: 13px;color: #888888;">摘要信息</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-tab__content">
+                    <div class="weui-btn_default weui-header" style="background-color: #EFEFF4;">
+                        <h1 class="weui-header-title f-black">通讯录</h1>
+                        <div class="weui-header-right"><a class="icon icon-83 f-black"></a></div>
+                    </div>
+                    <div class="weui-search-bar" id="searchBar">
+                        <form class="weui-search-bar__form" action="#">
+                            <div class="weui-search-bar__box">
+                                <i class="weui-icon-search"></i>
+                                <input class="weui-search-bar__input" id="searchInput" placeholder="搜索" required=""
+                                       type="search">
+                                <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                            </div>
+                            <label class="weui-search-bar__label" id="searchText"
+                                   style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                                <i class="weui-icon-search"></i>
+                                <span>搜索</span>
+                            </label>
+                        </form>
+                        <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+                    </div>
+                    <div class="weui-cells" style="margin-top: 0;">
+                        <div class="weui-cell" v-for="user in users" @click="chat(user.id,user.nickname,1)">
+                            <div class="weui-cell__hd">
+                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII="
+                                     style="width:20px;margin-right:5px;display:block">
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>{{user.nickname}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-tab__content">个人信息</div>
+            </div>
+            <div class="weui-tabbar tab-bottom">
+                <a href="javascript:;" class="weui-tabbar__item">
+                <span style="display: inline-block;position: relative;">
+                    <i class="icon icon-80 f27 weui-tabbar__icon"></i>
+                    <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">8</span>
+                </span>
+                    <p class="weui-tabbar__label">信息</p>
+                </a>
+                <a href="javascript:;" class="weui-tabbar__item">
+                    <i class="icon icon-30 f27 weui-tabbar__icon"></i>
+                    <p class="weui-tabbar__label">通讯录</p>
+                </a>
+                <a href="javascript:;" class="weui-tabbar__item ">
+                    <i class="icon icon-85 f27 weui-tabbar__icon"></i>
+                    <p class="weui-tabbar__label">我</p>
+                </a>
+            </div>
+        </div>
+        <div v-show="isChat">
+            <div class="weui-btn_default weui-header" style="background-color: #EFEFF4;">
+                <div class="weui-header-left" @click="isChat = false"><a class="icon icon-109 f-black"></a></div>
+                <h1 class="weui-header-title f-black">{{chatInfo.name}}</h1>
+                <div class="weui-header-right"><a class="icon icon-22 f-black"></a></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://weui.shanliwawa.top/js/zepto.min.js"></script>
+<script src="https://weui.shanliwawa.top/js/zepto.weui.js"></script>
+<script src="https://lib.baomitu.com/vue/2.6.11/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            token: new Date().getTime(),
+            isLogin: false,
+            isChat: false,
+            chatInfo: {
+                id: null,
+                name: null,
+                type: null // 1:私聊;2:群聊
+            },
+            ws: null,
+            users: [],
+            seq: 1
+        },
+        methods: {
+            getSeq: function () {
+                return this.seq++;
+            },
+            initWs: function () {
+                var self = this;
+                self.ws = new WebSocket("ws://localhost:9011/ws");
+                self.ws.onopen = function (evt) {
+                    console.log("Connection open");
+                    self.heatbeat();
+                };
+                self.ws.onclose = function (evt) {
+                    console.log("Connection closed.");
+                };
+                self.ws.onmessage = function (event) {
+                    self.cmdHandler(JSON.parse(event.data));
+                };
+            },
+            sendMsg: function (msg) {
+                this.ws.send(JSON.stringify(msg));
+            },
+            cmdHandler: function (json) {
+                switch (json.cmd) {
+                    case 2:
+                        if (this.isOk(json)) {
+                            this.isLogin = true;
+                            $.toptip('登录成功', 'success');
+                        }
+                        break;
+                    case 4:
+                        if (this.isOk(json)) {
+                            this.users = json.users;
+                        }
+                        break;
+                }
+            },
+            isOk: function (json) {
+                if (json.status !== 0) {
+                    $.toptip(json.msg, 'error');
+                    return false;
+                }
+                return true;
+            },
+            chat: function (userId, name, type) {
+                this.isChat = true;
+                this.chatInfo = {
+                    id: userId,
+                    name: name,
+                    type: type
+                };
+                console.log("chat:" + userId)
+            },
+            login: function () {
+                this.sendMsg({"cmd": 1, "seq": this.getSeq(), "token": this.token});
+            },
+            loadUsers: function () {
+                this.sendMsg({"cmd": 3, "seq": this.getSeq()});
+            },
+            heatbeat: function () {
+                var self = this;
+                setInterval(function () {
+                    self.sendMsg({"cmd": 8, "seq": self.getSeq()})
+                }, 49_000);
+            }
+        },
+        mounted: function () {
+            var self = this;
+            self.initWs();
+            $('.weui-tab').tab({
+                defaultIndex: 0,
+                activeClass: 'weui-bar__item_on',
+                onToggle: function (index) {
+                    if (index === 1) {
+                        self.loadUsers();
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
