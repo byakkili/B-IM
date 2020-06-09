@@ -1,5 +1,5 @@
 bim:
-  port: 9001
+  port: 9011
   reader-timeout: 60
   writer-timeout: 60
 spring:

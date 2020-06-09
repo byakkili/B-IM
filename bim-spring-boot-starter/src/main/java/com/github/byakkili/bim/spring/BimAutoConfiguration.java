@@ -56,11 +56,18 @@ public class BimAutoConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "close")
-    public BimServerBootstrap serverBootstrap() {
-        BimServerBootstrap bimServerBootstrap = new BimServerBootstrap(configuration());
+    public BimServerBootstrap serverBootstrap(BimConfiguration configuration) {
+        BimServerBootstrap bimServerBootstrap = new BimServerBootstrap(configuration);
         if (serverBootstrap != null) {
             bimServerBootstrap.setBootstrap(serverBootstrap);
         }
         return bimServerBootstrap;
+    }
+
+    @Bean
+    public BimCloseLifecycle bimLifecycle(BimServerBootstrap serverBootstrap) {
+        BimCloseLifecycle bimCloseLifecycle = new BimCloseLifecycle();
+        bimCloseLifecycle.setBimServerBootstrap(serverBootstrap);
+        return bimCloseLifecycle;
     }
 }
