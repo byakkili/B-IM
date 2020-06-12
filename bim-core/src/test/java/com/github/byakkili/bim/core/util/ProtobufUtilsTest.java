@@ -1,15 +1,14 @@
 package com.github.byakkili.bim.core.util;
 
-import com.github.byakkili.bim.core.protobuf.Packet.Chat;
-import com.github.byakkili.bim.core.protobuf.Packet.ChatType;
-import com.github.byakkili.bim.core.protobuf.Packet.Command;
-import com.github.byakkili.bim.core.protobuf.Packet.MsgType;
+import com.github.byakkili.bim.protobuf.Packet.Chat;
+import com.github.byakkili.bim.protobuf.Packet.ChatType;
+import com.github.byakkili.bim.protobuf.Packet.Command;
+import com.github.byakkili.bim.protobuf.Packet.MsgType;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Guannian Li
- * @date 2020/05/28
  */
 public class ProtobufUtilsTest {
     private Chat chat = Chat.newBuilder().setSeq(1).setTo("1").setContent("Hello World!").setChatType(ChatType.PRIVATE).setMsgType(MsgType.TEXT).setCmd(Command.CHAT).build();

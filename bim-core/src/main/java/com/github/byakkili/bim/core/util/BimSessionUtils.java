@@ -41,7 +41,11 @@ public class BimSessionUtils {
             session.setId(channel.id().asLongText());
             session.setChannel(channel);
             session.setContext(context);
-            channel.attr(SESSION_ATTR).set(session);
+
+            Object prevObj = channel.attr(SESSION_ATTR).setIfAbsent(session);
+            if (prevObj != null) {
+                return (BimSession) prevObj;
+            }
         }
         return session;
     }

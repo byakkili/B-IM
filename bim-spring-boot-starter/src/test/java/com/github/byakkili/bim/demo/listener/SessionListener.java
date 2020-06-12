@@ -5,7 +5,6 @@ import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.listener.ISessionListener;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import com.github.byakkili.bim.demo.constant.GlobalConst;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,10 +21,9 @@ public class SessionListener implements ISessionListener {
 
     @Override
     public void onAfterCreated(BimSession session) {
-        log.info("会话: {}, 已创建", session.getChannel().id().asShortText(), session.getId());
+        log.info("会话: {}, 已创建", session.getChannel().id().asShortText());
     }
 
-    @SneakyThrows
     @Override
     public void onBeforeDestroy(BimSession session) {
         log.info("会话: {}, 准备销毁", session.getChannel().id().asShortText());
@@ -38,6 +36,7 @@ public class SessionListener implements ISessionListener {
     @Override
     public void onReaderIdle(BimSession session) {
         log.info("会话: {}, 读超时, {}s", session.getChannel().id().asShortText(), session.getContext().getReaderTimeout());
+        // 关闭客户端
         session.getChannel().close();
     }
 

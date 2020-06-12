@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Closeable;
 import java.util.Set;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode
-public class BimSession {
+public class BimSession implements Closeable {
     /**
      * 会话ID
      */
@@ -105,6 +106,7 @@ public class BimSession {
     /**
      * 关闭
      */
+    @Override
     public synchronized void close() {
         id = null;
         context = null;

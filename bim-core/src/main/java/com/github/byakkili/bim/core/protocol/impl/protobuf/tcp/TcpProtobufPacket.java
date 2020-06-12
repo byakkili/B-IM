@@ -18,35 +18,40 @@ public class TcpProtobufPacket {
     /**
      * 协议头
      */
-    private byte head = PROTOCOL_HEAD;
-    /**
-     * 数据长度
-     */
-    private int length;
+    private final byte head = PROTOCOL_HEAD;
     /**
      * cmd
      */
-    private int cmd;
+    private final int cmd;
+    /**
+     * 数据长度
+     */
+    private final int length;
     /**
      * 数据
      */
-    private byte[] data;
-
-    public TcpProtobufPacket(byte[] bytes) {
-        if (ObjectUtil.equal(ArrayUtil.get(bytes, 0), PROTOCOL_HEAD)) {
-            this.length = NumberUtil.toInt(ArrayUtil.sub(bytes, 1, 5));
-            this.cmd = NumberUtil.toInt(ArrayUtil.sub(bytes, 5, 9));
-            this.data = ArrayUtil.sub(bytes, 9, bytes.length);
-        }
-    }
+    private final byte[] data;
 
     public TcpProtobufPacket(ProtobufFrame frame) {
-        this.cmd = frame.getCmd();
-        this.data = ProtobufUtils.serialize(frame.getMessage());
+        this(frame.getCmd(), ProtobufUtils.serialize(frame.getMessage()));
+    }
+
+    public TcpProtobufPacket(int cmd, byte[] data) {
+        this.cmd = cmd;
+        this.data = data;
         this.length = Integer.BYTES + data.length;
     }
 
-    public byte[] toBytes() {
+    public byte[] toByteArray() {
         return ArrayUtil.addAll(new byte[]{head}, NumberUtil.toBytes(length), NumberUtil.toBytes(cmd), data);
+    }
+
+    public static TcpProtobufPacket parse(byte[] bytes) {
+        if (ObjectUtil.equal(ArrayUtil.get(bytes, 0), PROTOCOL_HEAD)) {
+            int cmd = NumberUtil.toInt(ArrayUtil.sub(bytes, 5, 9));
+            byte[] data = ArrayUtil.sub(bytes, 9, bytes.length);
+            return new TcpProtobufPacket(cmd, data);
+        }
+        return null;
     }
 }

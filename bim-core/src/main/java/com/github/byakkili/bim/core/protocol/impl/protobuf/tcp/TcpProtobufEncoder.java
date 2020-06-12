@@ -21,6 +21,6 @@ public class TcpProtobufEncoder extends MessageToByteEncoder<ProtobufFrame> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ProtobufFrame frame, ByteBuf out) {
-        out.writeBytes(new TcpProtobufPacket(frame).toBytes());
+        out.writeBytes(new TcpProtobufPacket(frame).toByteArray());
     }
 }

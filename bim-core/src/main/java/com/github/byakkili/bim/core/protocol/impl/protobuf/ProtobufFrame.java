@@ -16,7 +16,7 @@ public class ProtobufFrame implements Serializable {
     /**
      * CMD
      */
-    private Integer cmd;
+    private int cmd;
     /**
      * protobuf
      */

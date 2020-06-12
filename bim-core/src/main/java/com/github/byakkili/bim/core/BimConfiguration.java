@@ -62,6 +62,16 @@ public class BimConfiguration {
     private final Map<Integer, ICmdHandler> cmdHandlers = new ConcurrentHashMap<>();
 
     /**
+     * 添加命令拦截器
+     *
+     * @param cmdInterceptor 命令拦截器
+     */
+    public void addCmdInterceptors(CmdInterceptor cmdInterceptor) {
+        cmdInterceptors.add(cmdInterceptor);
+        LOGGER.info("Cmd Interceptor: {}", cmdInterceptor.toString());
+    }
+
+    /**
      * 添加协议提供者
      *
      * @param protocolProvider 协议提供者
