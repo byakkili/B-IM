@@ -8,17 +8,17 @@ import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 /**
  * @author Guannian Li
  */
-public abstract class BaseJsonCmdHandler<REQUEST extends JsonMsg> extends BaseCmdHandler<REQUEST, JsonMsg> {
+public abstract class BaseJsonCmdHandler<T extends JsonMsg> extends BaseCmdHandler<T, JsonMsg> {
     @Override
     public String toString() {
         return StrUtil.format("{}(cmd:{}, protocol:json, reqClass:{})", this.getClass().getName(), cmd(), reqMsgClass().getName());
     }
 
     @Override
-    protected CmdMsgFrame<JsonMsg> handle(REQUEST msg, BimSession session) {
-        JsonMsg jsonMsg = process(msg, session);
+    protected CmdMsgFrame<JsonMsg> handle(T reqMsg, BimSession session) {
+        JsonMsg jsonMsg = process(reqMsg, session);
         return new CmdMsgFrame<>(jsonMsg.getCmd(), jsonMsg);
     }
 
-    protected abstract JsonMsg process(REQUEST msg, BimSession session);
+    protected abstract JsonMsg process(T reqMsg, BimSession session);
 }

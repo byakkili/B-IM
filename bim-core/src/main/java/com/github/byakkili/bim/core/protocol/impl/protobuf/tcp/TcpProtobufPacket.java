@@ -9,12 +9,16 @@ import com.google.protobuf.Message;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * @author Guannian Li
  */
 @Getter
 @ToString
-public class TcpProtobufPacket {
+public class TcpProtobufPacket implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     public static final byte PROTOCOL_HEAD = 0x02;
     /**
      * 协议头

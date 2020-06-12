@@ -25,9 +25,9 @@ public abstract class BaseCmdHandler<REQUEST, RESPONSE> implements ICmdHandler<R
     /**
      * 处理请求
      *
-     * @param msg     请求内容
+     * @param reqMsg  请求内容
      * @param session 会话
      * @return 响应内容(null : 不响应)
      */
-    protected abstract CmdMsgFrame<RESPONSE> handle(REQUEST msg, BimSession session);
+    protected abstract CmdMsgFrame<RESPONSE> handle(REQUEST reqMsg, BimSession session);
 }

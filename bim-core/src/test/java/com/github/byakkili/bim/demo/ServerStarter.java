@@ -11,7 +11,7 @@ import java.util.Scanner;
  * @author Guannian Li
  */
 public class ServerStarter {
-    public static final int PORT = 9000;
+    static final int PORT = 9000;
 
     public static void main(String[] args) {
         // 配置
@@ -31,6 +31,7 @@ public class ServerStarter {
         bootstrap.start();
 
         new Scanner(System.in).next();
+        // 关闭
         bootstrap.close();
     }
 }
