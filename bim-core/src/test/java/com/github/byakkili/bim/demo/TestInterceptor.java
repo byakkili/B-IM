@@ -2,6 +2,7 @@ package com.github.byakkili.bim.demo;
 
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,13 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestInterceptor implements CmdInterceptor {
     @Override
-    public boolean preHandle(Integer cmd, Object reqMsg, BimSession session) {
+    public boolean preHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
         log.info("会话: {}, preHandle", session.getChannel().id().asShortText());
         return true;
     }
 
     @Override
-    public void postHandle(Integer cmd, BimSession session, Object respMsg) {
+    public void postHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
         log.info("会话: {}, postHandle", session.getChannel().id().asShortText());
     }
 

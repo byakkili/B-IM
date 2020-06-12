@@ -1,6 +1,7 @@
 package com.github.byakkili.bim.core.cmd;
 
 import com.github.byakkili.bim.core.BimSession;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 
 /**
  * @author Guannian Li
@@ -23,9 +24,9 @@ public interface ICmdHandler<REQUEST, RESPONSE> {
     /**
      * 消息处理
      *
-     * @param msg     消息内容
+     * @param frame   消息帧
      * @param session 会话
      * @return 响应消息(null : 不响应)
      */
-    RESPONSE msgHandle(Object msg, BimSession session);
+    CmdMsgFrame<RESPONSE> msgHandle(CmdMsgFrame frame, BimSession session);
 }

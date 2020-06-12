@@ -1,6 +1,7 @@
 package com.github.byakkili.bim.core.interceptor;
 
 import com.github.byakkili.bim.core.BimSession;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 
 /**
  * CMD拦截器
@@ -11,23 +12,23 @@ public interface CmdInterceptor {
     /**
      * 前置处理
      *
-     * @param cmd     CMD
-     * @param reqMsg  请求消息
-     * @param session 会话
+     * @param cmd      CMD
+     * @param reqFrame 请求消息
+     * @param session  会话
      * @return 是否往下执行
      */
-    default boolean preHandle(Integer cmd, Object reqMsg, BimSession session) {
+    default boolean preHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
         return true;
     }
 
     /**
      * 后置处理 (如果CmdHandler出现异常, 不会执行)
      *
-     * @param cmd     CMD
-     * @param session 会话
-     * @param respMsg 响应消息
+     * @param cmd       CMD
+     * @param session   会话
+     * @param respFrame 响应消息
      */
-    default void postHandle(Integer cmd, BimSession session, Object respMsg) {
+    default void postHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
         // ignore
     }
 

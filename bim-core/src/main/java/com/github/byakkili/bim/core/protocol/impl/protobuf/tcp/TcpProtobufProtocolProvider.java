@@ -1,8 +1,8 @@
 package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.github.byakkili.bim.core.protocol.CmdMsgChannelHandler;
 import com.github.byakkili.bim.core.protocol.IProtocolProvider;
-import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufCmdChannelHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -39,8 +39,8 @@ public class TcpProtobufProtocolProvider implements IProtocolProvider {
         return new ChannelHandler[]{
                 // 协议1位, 长度4位, cmd4位, protobuf n位
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
-                TcpProtobufEncoder.INSTANCE,
-                ProtobufCmdChannelHandler.INSTANCE
+                TcpProtobufCodec.INSTANCE,
+                CmdMsgChannelHandler.INSTANCE
         };
     }
 }

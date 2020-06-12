@@ -5,9 +5,13 @@ import com.github.byakkili.bim.core.BimContext;
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.cmd.ICmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
+import com.github.byakkili.bim.core.listener.ISessionListener;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,38 +21,41 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-public abstract class BaseCmdChannelHandler<INBOUND, REQUEST, RESPONSE> extends MessageToMessageCodec<INBOUND, RESPONSE> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseCmdChannelHandler.class);
+@ChannelHandler.Sharable
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFrame> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmdMsgChannelHandler.class);
+    /**
+     * 单例
+     */
+    public static final CmdMsgChannelHandler INSTANCE = new CmdMsgChannelHandler();
 
     @Override
-    protected final void decode(ChannelHandlerContext ctx, INBOUND msg, List<Object> list) {
+    protected final void decode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
+        ISessionListener sessionListener = context.getSessionListener();
         Map<Integer, ICmdHandler> cmdHandlers = context.getCmdHandlers();
 
-        Integer cmd = getCmd(msg);
+        Integer cmd = frame.getCmd();
+
         ICmdHandler cmdHandler = cmd == null ? null : cmdHandlers.get(cmd);
         if (cmdHandler == null) {
-            //TODO no cmd
             return;
         }
-        @SuppressWarnings("unchecked")
-        Class<REQUEST> reqMsgClass = cmdHandler.reqMsgClass();
-        REQUEST reqMsg = convert(msg, reqMsgClass);
-
-        context.getSessionListener().onRead(reqMsg, session);
-
+        if (sessionListener != null) {
+            sessionListener.onRead(frame, session);
+        }
         RuntimeException ex = null;
         try {
-            if (!applyPreHandle(cmd, reqMsg, session)) {
+            if (!applyPreHandle(cmd, frame, session)) {
                 return;
             }
-            @SuppressWarnings("unchecked")
-            RESPONSE respMsg = (RESPONSE) cmdHandler.msgHandle(reqMsg, session);
-            applyPostHandle(cmd, session, respMsg);
+            CmdMsgFrame respFrame = cmdHandler.msgHandle(frame, session);
+            applyPostHandle(cmd, session, respFrame);
 
-            if (respMsg != null) {
-                session.writeAndFlush(respMsg);
+            if (respFrame != null) {
+                session.writeAndFlush(respFrame);
             }
         } catch (RuntimeException e) {
             ex = e;
@@ -59,44 +66,30 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQUEST, RESPONSE> extends 
     }
 
     @Override
-    protected final void encode(ChannelHandlerContext ctx, RESPONSE respMsg, List<Object> list) {
+    protected final void encode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
+        ISessionListener sessionListener = context.getSessionListener();
 
-        context.getSessionListener().onWrite(respMsg, session);
-        list.add(respMsg);
+        if (sessionListener != null) {
+            sessionListener.onWrite(frame, session);
+        }
+        list.add(frame);
     }
-
-    /**
-     * 获取CMD
-     *
-     * @param msg 请求消息
-     * @return CMD
-     */
-    protected abstract Integer getCmd(INBOUND msg);
-
-    /**
-     * 类型转换
-     *
-     * @param msg         请求消息
-     * @param targetClass 目标类型
-     * @return 目标对象
-     */
-    protected abstract REQUEST convert(INBOUND msg, Class<REQUEST> targetClass);
 
     /**
      * 前置处理
      *
-     * @param cmd     CMD
-     * @param reqMsg  请求消息
-     * @param session 会话
+     * @param cmd      CMD
+     * @param reqFrame 请求消息
+     * @param session  会话
      * @return 是否往下执行
      */
-    private boolean applyPreHandle(Integer cmd, Object reqMsg, BimSession session) {
+    private boolean applyPreHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
-                if (!interceptor.preHandle(cmd, reqMsg, session)) {
+                if (!interceptor.preHandle(cmd, reqFrame, session)) {
                     return false;
                 }
             }
@@ -107,16 +100,16 @@ public abstract class BaseCmdChannelHandler<INBOUND, REQUEST, RESPONSE> extends 
     /**
      * 后置处理
      *
-     * @param cmd     CMD
-     * @param session 会话
-     * @param respMsg 响应消息
+     * @param cmd       CMD
+     * @param session   会话
+     * @param respFrame 响应消息
      */
-    private void applyPostHandle(Integer cmd, BimSession session, Object respMsg) {
+    private void applyPostHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
                 try {
-                    interceptor.postHandle(cmd, session, respMsg);
+                    interceptor.postHandle(cmd, session, respFrame);
                 } catch (RuntimeException e) {
                     LOGGER.error("CmdInterceptor.postHandle threw exception", e);
                 }

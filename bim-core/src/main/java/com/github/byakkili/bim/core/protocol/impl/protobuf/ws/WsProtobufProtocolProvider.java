@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.protobuf.ws;
 
 import com.github.byakkili.bim.core.protocol.BaseWsProtocolProvider;
-import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufCmdChannelHandler;
+import com.github.byakkili.bim.core.protocol.CmdMsgChannelHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -22,7 +22,7 @@ public class WsProtobufProtocolProvider extends BaseWsProtocolProvider {
                 new HttpObjectAggregator(1024),
                 new WebSocketServerProtocolHandler("/ws", true),
                 WsProtobufCodec.INSTANCE,
-                ProtobufCmdChannelHandler.INSTANCE
+                CmdMsgChannelHandler.INSTANCE
         };
     }
 }

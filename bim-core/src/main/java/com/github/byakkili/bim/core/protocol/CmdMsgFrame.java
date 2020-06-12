@@ -1,6 +1,5 @@
-package com.github.byakkili.bim.core.protocol.impl.protobuf;
+package com.github.byakkili.bim.core.protocol;
 
-import com.google.protobuf.Message;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,14 +10,14 @@ import java.io.Serializable;
  */
 @Getter
 @AllArgsConstructor
-public class ProtobufFrame implements Serializable {
+public class CmdMsgFrame<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
      * CMD
      */
-    private int cmd;
+    private final Integer cmd;
     /**
-     * protobuf
+     * Msg
      */
-    private Message message;
+    private final T msg;
 }

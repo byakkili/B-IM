@@ -3,6 +3,7 @@ package com.github.byakkili.bim.demo.listener;
 import cn.hutool.core.util.StrUtil;
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.listener.ISessionListener;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import com.github.byakkili.bim.demo.constant.GlobalConst;
 import lombok.extern.slf4j.Slf4j;
@@ -46,12 +47,12 @@ public class SessionListener implements ISessionListener {
     }
 
     @Override
-    public void onRead(Object msg, BimSession session) {
-        log.info("会话: {}, 请求: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(msg));
+    public void onRead(CmdMsgFrame frame, BimSession session) {
+        log.info("会话: {}, 请求: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
     }
 
     @Override
-    public void onWrite(Object msg, BimSession session) {
-        log.info("会话: {}, 响应: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(msg));
+    public void onWrite(CmdMsgFrame frame, BimSession session) {
+        log.info("会话: {}, 响应: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
     }
 }

@@ -23,7 +23,7 @@ public class OnlineUsersHandler extends BaseJsonCmdHandler<SimpleMsg> {
     private StringRedisTemplate redisTemplate;
 
     @Override
-    protected JsonMsg handle(SimpleMsg reqMsg, BimSession session) {
+    protected JsonMsg process(SimpleMsg reqMsg, BimSession session) {
         List<UserInfo> users = redisTemplate.opsForHash().entries(GlobalConst.REDIS_ONLINE_USERS).entrySet()
                 .stream().map(entry -> {
                     UserInfo userInfo = new UserInfo();

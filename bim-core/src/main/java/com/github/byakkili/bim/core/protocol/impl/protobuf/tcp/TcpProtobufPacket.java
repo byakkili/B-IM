@@ -3,8 +3,9 @@ package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufFrame;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import com.github.byakkili.bim.core.util.ProtobufUtils;
+import com.google.protobuf.Message;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -32,8 +33,8 @@ public class TcpProtobufPacket {
      */
     private final byte[] data;
 
-    public TcpProtobufPacket(ProtobufFrame frame) {
-        this(frame.getCmd(), ProtobufUtils.serialize(frame.getMessage()));
+    public TcpProtobufPacket(CmdMsgFrame<Message> frame) {
+        this(frame.getCmd(), ProtobufUtils.serialize(frame.getMsg()));
     }
 
     public TcpProtobufPacket(int cmd, byte[] data) {
@@ -47,11 +48,11 @@ public class TcpProtobufPacket {
     }
 
     public static TcpProtobufPacket parse(byte[] bytes) {
-        if (ObjectUtil.equal(ArrayUtil.get(bytes, 0), PROTOCOL_HEAD)) {
-            int cmd = NumberUtil.toInt(ArrayUtil.sub(bytes, 5, 9));
-            byte[] data = ArrayUtil.sub(bytes, 9, bytes.length);
-            return new TcpProtobufPacket(cmd, data);
+        if (ObjectUtil.notEqual(ArrayUtil.get(bytes, 0), PROTOCOL_HEAD)) {
+            return null;
         }
-        return null;
+        int cmd = NumberUtil.toInt(ArrayUtil.sub(bytes, 5, 9));
+        byte[] data = ArrayUtil.sub(bytes, 9, bytes.length);
+        return new TcpProtobufPacket(cmd, data);
     }
 }

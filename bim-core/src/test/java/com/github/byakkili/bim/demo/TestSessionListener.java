@@ -2,7 +2,7 @@ package com.github.byakkili.bim.demo;
 
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.listener.ISessionListener;
-import com.github.byakkili.bim.core.protocol.impl.protobuf.ProtobufFrame;
+import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import com.google.protobuf.Message;
 import com.googlecode.protobuf.format.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
@@ -37,16 +37,16 @@ public class TestSessionListener implements ISessionListener {
     }
 
     @Override
-    public void onRead(Object msg, BimSession session) {
-        if (msg instanceof Message) {
-            log.info("会话: {}, 请求: {}", session.getId(), jsonFormat.printToString((Message) msg));
+    public void onRead(CmdMsgFrame frame, BimSession session) {
+        if (frame.getMsg() instanceof Message) {
+            log.info("会话: {}, 请求 -> cmd: {}, data: {}", session.getId(), frame.getCmd(), jsonFormat.printToString((Message) frame.getMsg()));
         }
     }
 
     @Override
-    public void onWrite(Object msg, BimSession session) {
-        if (msg instanceof ProtobufFrame) {
-            log.info("会话: {}, 响应: {}", session.getId(), jsonFormat.printToString(((ProtobufFrame) msg).getMessage()));
+    public void onWrite(CmdMsgFrame frame, BimSession session) {
+        if (frame.getMsg() instanceof Message) {
+            log.info("会话: {}, 响应 -> cmd: {}, data: {}", session.getId(), frame.getCmd(), jsonFormat.printToString((Message) frame.getMsg()));
         }
     }
 }

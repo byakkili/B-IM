@@ -23,7 +23,7 @@ public class AuthCmdHandler extends BaseJsonCmdHandler<AuthReqMsg> {
     private StringRedisTemplate redisTemplate;
 
     @Override
-    protected JsonMsg handle(AuthReqMsg reqMsg, BimSession session) {
+    protected JsonMsg process(AuthReqMsg reqMsg, BimSession session) {
         // 验证Token不能为空
         if (StrUtil.isBlank(reqMsg.getToken())) {
             session.writeAndFlush(new AckMsg(Cmd.AUTH_RESP, reqMsg.getSeq(), -1, "Token不能为空"));
