@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.demo;
 
-import cn.hutool.core.io.BufferUtil;
-import cn.hutool.socket.nio.NioClient;
+import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.tcp.TcpProtobufPacket;
 import com.github.byakkili.bim.protobuf.Packet.Chat;
 import com.github.byakkili.bim.protobuf.Packet.ChatType;
@@ -11,7 +11,9 @@ import com.googlecode.protobuf.format.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 
 /**
  * @author Guannian Li
@@ -21,33 +23,44 @@ public class ClientTcp {
     private static JsonFormat jsonFormat = new JsonFormat();
 
     public static void main(String[] args) throws IOException {
-        Chat sendChat = Chat.newBuilder()
-                .setCmd(Command.CHAT)
-                .setSeq(999)
-                .setTo("张三")
-                .setContent("你好")
-                .setChatType(ChatType.PRIVATE)
-                .setMsgType(MsgType.TEXT)
-                .build();
+        try (
+                Socket socket = new Socket("127.0.0.1", ServerStarter.PORT);
+                InputStream inputStream = socket.getInputStream();
+                OutputStream outputStream = socket.getOutputStream()
+        ) {
+            Chat sendChat = Chat.newBuilder()
+                    .setCmd(Command.CHAT)
+                    .setSeq(999)
+                    .setTo("张三")
+                    .setContent("你好")
+                    .setChatType(ChatType.GROUP)
+                    .setMsgType(MsgType.VIDEO)
+                    .build();
+            TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCmdValue(), sendChat.toByteArray());
+            IoUtil.write(outputStream, false, sendPacket.toByteArray());
+            log.info("Send: {}", jsonFormat.printToString(sendChat));
 
-        NioClient nioClient = new NioClient("127.0.0.1", ServerStarter.PORT);
+            byte[] receiveBytes = readBytes(inputStream);
+            TcpProtobufPacket receivePacket = TcpProtobufPacket.parse(receiveBytes);
+            Chat receiveChat = Chat.parseFrom(receivePacket.getData());
+            log.info("Receive: {}", jsonFormat.printToString(receiveChat));
+        }
+    }
 
-        ByteBuffer allocate = ByteBuffer.allocate(1024);
+    private static byte[] readBytes(InputStream in) {
+        try {
+            byte[] b = new byte[200];
+            int readLength = in.read(b);
+            if (readLength > 0 && readLength < b.length) {
+                byte[] b2 = new byte[readLength];
+                System.arraycopy(b, 0, b2, 0, readLength);
+                return b2;
+            } else {
+                return b;
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
 
-        TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCmdValue(), sendChat.toByteArray());
-        allocate.put(sendPacket.toByteArray()).flip();
-        nioClient.write(allocate);
-        log.info("Send: {}", jsonFormat.printToString(sendChat));
-
-        allocate.clear();
-        nioClient.read(allocate);
-        allocate.flip();
-        byte[] receiveBytes = BufferUtil.readBytes(allocate);
-
-        TcpProtobufPacket receivePacket = TcpProtobufPacket.parse(receiveBytes);
-        Chat receiveChat = Chat.parseFrom(receivePacket.getData());
-        log.info("Receive: {}", jsonFormat.printToString(receiveChat));
-
-        nioClient.close();
     }
 }

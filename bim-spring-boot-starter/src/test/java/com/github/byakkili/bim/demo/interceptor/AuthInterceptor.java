@@ -26,10 +26,10 @@ public class AuthInterceptor implements CmdInterceptor {
     private Set<Integer> skiptCmds = CollUtil.newHashSet(Cmd.AUTH_REQ, Cmd.PING);
 
     @Override
-    public boolean preHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
+    public boolean preHandle(CmdMsgFrame reqFrame, BimSession session) {
         Boolean login = (Boolean) session.getAttribute("isLogin");
 
-        if (!skiptCmds.contains(cmd) && !BooleanUtil.isTrue(login)) {
+        if (!skiptCmds.contains(reqFrame.getCmd()) && !BooleanUtil.isTrue(login)) {
             log.info("会话: {}, 拒绝请求, {}", session.getChannel().id().asShortText(), JsonUtils.stringify(reqFrame.getMsg()));
 
             Object seq = BeanUtil.getFieldValue(reqFrame.getMsg(), "seq");

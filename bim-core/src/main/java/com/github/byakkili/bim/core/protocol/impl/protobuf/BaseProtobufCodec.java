@@ -24,7 +24,7 @@ public abstract class BaseProtobufCodec<T> extends MessageToMessageCodec<T, CmdM
         int cmd = byteBuf.readInt();
         ICmdHandler cmdHandler = cmdHandlers.get(cmd);
         if (cmdHandler == null) {
-            return null;
+            return new CmdMsgFrame<>(cmd, null);
         }
         byte[] bytes = ByteBufUtil.getBytes(byteBuf);
         @SuppressWarnings("unchecked")

@@ -20,9 +20,12 @@ public abstract class BaseJsonCodec<T> extends MessageToMessageCodec<T, CmdMsgFr
         Map<Integer, ICmdHandler> cmdHandlers = context.getCmdHandlers();
 
         Integer cmd = MapUtil.getInt(jsonMap, JsonMsg.CMD_FIELD);
-        ICmdHandler cmdHandler = cmd == null ? null : cmdHandlers.get(cmd);
-        if (cmdHandler == null) {
+        if (cmd == null) {
             return null;
+        }
+        ICmdHandler cmdHandler = cmdHandlers.get(cmd);
+        if (cmdHandler == null) {
+            return new CmdMsgFrame<>(cmd, null);
         }
         @SuppressWarnings("unchecked")
         Class<JsonMsg> reqMsgClass = cmdHandler.reqMsgClass();

@@ -3,6 +3,7 @@ package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.byakkili.bim.core.protocol.CmdMsgChannelHandler;
 import com.github.byakkili.bim.core.protocol.IProtocolProvider;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsgEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -40,7 +41,8 @@ public class TcpJsonProtocolProvider implements IProtocolProvider {
                 // 协议1位, 长度4位, Json bytes
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
                 TcpJsonCodec.INSTANCE,
-                CmdMsgChannelHandler.INSTANCE
+                CmdMsgChannelHandler.INSTANCE,
+                JsonMsgEncoder.INSTANCE
         };
     }
 }

@@ -11,18 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestInterceptor implements CmdInterceptor {
     @Override
-    public boolean preHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
+    public boolean preHandle(CmdMsgFrame reqFrame, BimSession session) {
         log.info("会话: {}, preHandle", session.getChannel().id().asShortText());
         return true;
     }
 
     @Override
-    public void postHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
+    public void postHandle(CmdMsgFrame respFrame, BimSession session) {
         log.info("会话: {}, postHandle", session.getChannel().id().asShortText());
     }
 
     @Override
-    public void afterCompletion(Integer cmd, BimSession session, Exception e) {
+    public void afterCompletion(CmdMsgFrame reqFrame, BimSession session, Exception e) {
         log.info("会话: {}, afterCompletion", session.getChannel().id().asShortText());
     }
 }

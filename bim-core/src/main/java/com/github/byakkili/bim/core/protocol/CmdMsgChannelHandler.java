@@ -37,31 +37,31 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
         ISessionListener sessionListener = context.getSessionListener();
         Map<Integer, ICmdHandler> cmdHandlers = context.getCmdHandlers();
 
-        Integer cmd = frame.getCmd();
-
-        ICmdHandler cmdHandler = cmd == null ? null : cmdHandlers.get(cmd);
-        if (cmdHandler == null) {
-            return;
-        }
         if (sessionListener != null) {
             sessionListener.onRead(frame, session);
         }
+
         RuntimeException ex = null;
+        CmdMsgFrame respFrame = null;
         try {
-            if (!applyPreHandle(cmd, frame, session)) {
+            if (!applyPreHandle(frame, session)) {
                 return;
             }
-            CmdMsgFrame respFrame = cmdHandler.msgHandle(frame, session);
-            applyPostHandle(cmd, session, respFrame);
-
-            if (respFrame != null) {
-                session.writeAndFlush(respFrame);
+            Integer cmd = frame.getCmd();
+            ICmdHandler cmdHandler = cmd == null ? null : cmdHandlers.get(cmd);
+            if (cmdHandler == null) {
+                return;
             }
+            respFrame = cmdHandler.msgHandle(frame, session);
+            applyPostHandle(respFrame, session);
         } catch (RuntimeException e) {
             ex = e;
             throw e;
         } finally {
-            triggerAfterCompletion(cmd, session, ex);
+            triggerAfterCompletion(frame, session, ex);
+            if (respFrame != null) {
+                session.writeAndFlush(respFrame);
+            }
         }
     }
 
@@ -80,16 +80,15 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     /**
      * 前置处理
      *
-     * @param cmd      CMD
-     * @param reqFrame 请求消息
+     * @param reqFrame 请求帧
      * @param session  会话
      * @return 是否往下执行
      */
-    private boolean applyPreHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
+    private boolean applyPreHandle(CmdMsgFrame reqFrame, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
-                if (!interceptor.preHandle(cmd, reqFrame, session)) {
+                if (!interceptor.preHandle(reqFrame, session)) {
                     return false;
                 }
             }
@@ -100,16 +99,15 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     /**
      * 后置处理
      *
-     * @param cmd       CMD
+     * @param respFrame 响应帧
      * @param session   会话
-     * @param respFrame 响应消息
      */
-    private void applyPostHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
+    private void applyPostHandle(CmdMsgFrame respFrame, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
                 try {
-                    interceptor.postHandle(cmd, session, respFrame);
+                    interceptor.postHandle(respFrame, session);
                 } catch (RuntimeException e) {
                     LOGGER.error("CmdInterceptor.postHandle threw exception", e);
                 }
@@ -120,16 +118,16 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     /**
      * 完成后处罚
      *
-     * @param cmd     命令
-     * @param session 会话
-     * @param e       异常
+     * @param reqFrame 请求帧
+     * @param session  会话
+     * @param e        异常
      */
-    private void triggerAfterCompletion(Integer cmd, BimSession session, Exception e) {
+    private void triggerAfterCompletion(CmdMsgFrame reqFrame, BimSession session, Exception e) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
                 try {
-                    interceptor.afterCompletion(cmd, session, e);
+                    interceptor.afterCompletion(reqFrame, session, e);
                 } catch (RuntimeException re) {
                     LOGGER.error("CmdInterceptor.afterCompletion threw exception", re);
                 }

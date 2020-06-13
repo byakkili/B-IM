@@ -15,7 +15,7 @@ public abstract class BaseJsonCmdHandler<T extends JsonMsg> extends BaseCmdHandl
     }
 
     @Override
-    protected CmdMsgFrame<JsonMsg> handle(T reqMsg, BimSession session) {
+    protected final CmdMsgFrame<JsonMsg> handle(T reqMsg, BimSession session) {
         JsonMsg jsonMsg = process(reqMsg, session);
         return new CmdMsgFrame<>(jsonMsg.getCmd(), jsonMsg);
     }

@@ -64,12 +64,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-socket</artifactId>
-            <version>5.3.7</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.1</version>
@@ -83,4 +77,36 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.2</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
+                    <outputDirectory>${project.build.testSourceDirectory}</outputDirectory>
+                    <protocArtifact>com.google.protobuf:protoc:3.10.0:exe:${os.detected.classifier}</protocArtifact>
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                    <temporaryProtoFileDirectory>${project.build.directory}/protoc-tmp</temporaryProtoFileDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -12,34 +12,32 @@ public interface CmdInterceptor {
     /**
      * 前置处理
      *
-     * @param cmd      CMD
-     * @param reqFrame 请求消息
+     * @param reqFrame 请求帧
      * @param session  会话
      * @return 是否往下执行
      */
-    default boolean preHandle(Integer cmd, CmdMsgFrame reqFrame, BimSession session) {
+    default boolean preHandle(CmdMsgFrame reqFrame, BimSession session) {
         return true;
     }
 
     /**
      * 后置处理 (如果CmdHandler出现异常, 不会执行)
      *
-     * @param cmd       CMD
+     * @param respFrame 响应帧
      * @param session   会话
-     * @param respFrame 响应消息
      */
-    default void postHandle(Integer cmd, BimSession session, CmdMsgFrame respFrame) {
+    default void postHandle(CmdMsgFrame respFrame, BimSession session) {
         // ignore
     }
 
     /**
      * 完成后处理
      *
-     * @param cmd     CMD
-     * @param session 会话
-     * @param e       异常
+     * @param reqFrame 请求帧
+     * @param session  会话
+     * @param e        异常
      */
-    default void afterCompletion(Integer cmd, BimSession session, Exception e) {
+    default void afterCompletion(CmdMsgFrame reqFrame, BimSession session, Exception e) {
         // ignore
     }
 }
