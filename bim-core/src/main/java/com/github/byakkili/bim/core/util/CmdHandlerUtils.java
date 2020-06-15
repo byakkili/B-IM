@@ -1,6 +1,8 @@
 package com.github.byakkili.bim.core.util;
 
 import com.github.byakkili.bim.core.cmd.CmdHandler;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
@@ -13,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Guannian Li
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CmdHandlerUtils {
 
     private static final Map<Class<?>, Class<?>> CACHE = new ConcurrentHashMap<>();

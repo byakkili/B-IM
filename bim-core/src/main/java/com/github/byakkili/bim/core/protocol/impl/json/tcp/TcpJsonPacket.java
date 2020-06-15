@@ -21,7 +21,7 @@ public class TcpJsonPacket implements Serializable {
     /**
      * 协议头
      */
-    private final byte head = PROTOCOL_HEAD;
+    private final byte head;
     /**
      * 数据长度
      */
@@ -40,6 +40,7 @@ public class TcpJsonPacket implements Serializable {
     }
 
     public TcpJsonPacket(byte[] data) {
+        this.head = PROTOCOL_HEAD;
         this.data = data;
         this.length = data.length;
     }

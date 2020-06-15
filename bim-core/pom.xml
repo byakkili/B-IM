@@ -101,6 +101,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>protobuf-testCompile</id>
                         <phase>process-test-resources</phase>
                         <goals>
                             <goal>test-compile</goal>

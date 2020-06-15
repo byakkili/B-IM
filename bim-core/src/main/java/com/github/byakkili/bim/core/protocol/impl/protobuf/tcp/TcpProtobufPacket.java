@@ -23,7 +23,7 @@ public class TcpProtobufPacket implements Serializable {
     /**
      * 协议头
      */
-    private final byte head = PROTOCOL_HEAD;
+    private final byte head;
     /**
      * cmd
      */
@@ -42,6 +42,7 @@ public class TcpProtobufPacket implements Serializable {
     }
 
     public TcpProtobufPacket(int cmd, byte[] data) {
+        this.head = PROTOCOL_HEAD;
         this.cmd = cmd;
         this.data = data;
         this.length = Integer.BYTES + data.length;
