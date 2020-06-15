@@ -92,17 +92,18 @@
                 <version>0.6.1</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
                     <outputDirectory>${project.build.testSourceDirectory}</outputDirectory>
-                    <protocArtifact>com.google.protobuf:protoc:3.10.0:exe:${os.detected.classifier}</protocArtifact>
+                    <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
+                    <protoTestSourceRoot>${project.build.testSourceDirectory}</protoTestSourceRoot>
+                    <protocArtifact>com.google.protobuf:protoc:3.11.4:exe:${os.detected.classifier}</protocArtifact>
                     <clearOutputDirectory>false</clearOutputDirectory>
                     <temporaryProtoFileDirectory>${project.build.directory}/protoc-tmp</temporaryProtoFileDirectory>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
+                        <phase>process-test-resources</phase>
                         <goals>
-                            <goal>compile</goal>
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>
