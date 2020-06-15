@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.demo;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.listener.ISessionListener;
+import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import com.google.protobuf.Message;
 import com.googlecode.protobuf.format.JsonFormat;
@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Guannian Li
  */
 @Slf4j
-public class TestSessionListener implements ISessionListener {
+public class TestSessionListener implements SessionListener {
     private JsonFormat jsonFormat = new JsonFormat();
 
     @Override

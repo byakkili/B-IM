@@ -2,12 +2,11 @@ package com.github.byakkili.bim.core;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
-import com.github.byakkili.bim.core.cluster.IClusterManager;
-import com.github.byakkili.bim.core.cmd.ICmdHandler;
-import com.github.byakkili.bim.core.exception.BimRuntimeException;
+import com.github.byakkili.bim.core.cluster.ClusterManager;
+import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
-import com.github.byakkili.bim.core.listener.ISessionListener;
-import com.github.byakkili.bim.core.protocol.IProtocolProvider;
+import com.github.byakkili.bim.core.listener.SessionListener;
+import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,11 +42,11 @@ public class BimConfiguration {
     /**
      * 集群
      */
-    private IClusterManager clusterManager;
+    private ClusterManager clusterManager;
     /**
      * 会话监听器
      */
-    private ISessionListener sessionListener;
+    private SessionListener sessionListener;
     /**
      * 命令拦截器
      */
@@ -55,11 +54,11 @@ public class BimConfiguration {
     /**
      * 协议提供者列表
      */
-    private final Set<IProtocolProvider> protocolProviders = new ConcurrentHashSet<>();
+    private final Set<ProtocolProvider> protocolProviders = new ConcurrentHashSet<>();
     /**
      * cmd处理器
      */
-    private final Map<Integer, ICmdHandler> cmdHandlers = new ConcurrentHashMap<>();
+    private final Map<Integer, CmdHandler> cmdHandlers = new ConcurrentHashMap<>();
 
     /**
      * 添加命令拦截器
@@ -76,7 +75,7 @@ public class BimConfiguration {
      *
      * @param protocolProvider 协议提供者
      */
-    public void addProtocolProvider(IProtocolProvider protocolProvider) {
+    public void addProtocolProvider(ProtocolProvider protocolProvider) {
         protocolProviders.add(protocolProvider);
         LOGGER.info("Protocol: {}", protocolProvider.toString());
     }
@@ -86,10 +85,10 @@ public class BimConfiguration {
      *
      * @param cmdHandler cmd处理器
      */
-    public void addCmdHandler(ICmdHandler cmdHandler) {
+    public void addCmdHandler(CmdHandler cmdHandler) {
         int cmd = cmdHandler.cmd();
         if (cmdHandlers.containsKey(cmd)) {
-            throw new BimRuntimeException("Cmd already exists");
+            throw new IllegalArgumentException("Cmd already exists");
         } else {
             cmdHandlers.put(cmd, cmdHandler);
             LOGGER.info("Cmd Handler: {} -> {}", cmd, cmdHandler.toString());

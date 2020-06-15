@@ -6,7 +6,7 @@ import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 /**
  * @author Guannian Li
  */
-public interface ISessionListener {
+public interface SessionListener {
     /**
      * 会话创建之后的通知回调
      *

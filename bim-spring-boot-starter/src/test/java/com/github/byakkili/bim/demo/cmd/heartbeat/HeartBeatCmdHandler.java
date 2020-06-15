@@ -14,17 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class HeartBeatCmdHandler extends BaseJsonCmdHandler<SimpleMsg> {
     @Override
-    protected JsonMsg process(SimpleMsg reqMsg, BimSession session) {
+    public JsonMsg handle(SimpleMsg reqMsg, BimSession session) {
         return new AckMsg(Cmd.PONG, reqMsg.getSeq(), 0, "PONG");
     }
 
     @Override
     public int cmd() {
         return Cmd.PING;
-    }
-
-    @Override
-    public Class<SimpleMsg> reqMsgClass() {
-        return SimpleMsg.class;
     }
 }

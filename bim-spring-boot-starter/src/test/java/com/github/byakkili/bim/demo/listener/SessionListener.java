@@ -2,7 +2,6 @@ package com.github.byakkili.bim.demo.listener;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.listener.ISessionListener;
 import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import com.github.byakkili.bim.demo.constant.GlobalConst;
@@ -16,18 +15,18 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SessionListener implements ISessionListener {
+public class SessionListener implements com.github.byakkili.bim.core.listener.SessionListener {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Override
     public void onAfterCreated(BimSession session) {
-        log.info("会话: {}, 已创建", session.getChannel().id().asShortText());
+        log.info("会话: {}, 已创建", session.getId());
     }
 
     @Override
     public void onBeforeDestroy(BimSession session) {
-        log.info("会话: {}, 准备销毁", session.getChannel().id().asShortText());
+        log.info("会话: {}, 准备销毁", session.getId());
         String userId = session.getUserId();
         if (StrUtil.isNotBlank(userId)) {
             redisTemplate.opsForHash().delete(GlobalConst.REDIS_ONLINE_USERS, userId);
@@ -36,23 +35,23 @@ public class SessionListener implements ISessionListener {
 
     @Override
     public void onReaderIdle(BimSession session) {
-        log.info("会话: {}, 读超时, {}s", session.getChannel().id().asShortText(), session.getContext().getReaderTimeout());
+        log.info("会话: {}, 读超时, {}s", session.getId(), session.getContext().getReaderTimeout());
         // 关闭客户端
         session.getChannel().close();
     }
 
     @Override
     public void onWriterIdle(BimSession session) {
-        log.info("会话: {}, 写超时, {}s", session.getChannel().id().asShortText(), session.getContext().getWriterTimeout());
+        log.info("会话: {}, 写超时, {}s", session.getId(), session.getContext().getWriterTimeout());
     }
 
     @Override
     public void onRead(CmdMsgFrame frame, BimSession session) {
-        log.info("会话: {}, 请求: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
+        log.info("会话: {}, 请求: {}", session.getId(), JsonUtils.stringify(frame.getMsg()));
     }
 
     @Override
     public void onWrite(CmdMsgFrame frame, BimSession session) {
-        log.info("会话: {}, 响应: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
+        log.info("会话: {}, 响应: {}", session.getId(), JsonUtils.stringify(frame.getMsg()));
     }
 }

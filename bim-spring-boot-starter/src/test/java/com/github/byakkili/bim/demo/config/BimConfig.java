@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.demo.config;
 
-import com.github.byakkili.bim.core.cluster.IClusterHandler;
-import com.github.byakkili.bim.core.cluster.IClusterManager;
+import com.github.byakkili.bim.core.cluster.ClusterHandler;
+import com.github.byakkili.bim.core.cluster.ClusterManager;
 import com.github.byakkili.bim.core.cluster.redisson.RedissonClusterManager;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.ws.WsJsonProtocolProvider;
@@ -19,7 +19,7 @@ import java.util.List;
 @Configuration
 public class BimConfig {
     @Autowired
-    private List<IClusterHandler> clusterHandlers;
+    private List<ClusterHandler> clusterHandlers;
 
     /**
      * TCP WebSocket 协议
@@ -41,7 +41,7 @@ public class BimConfig {
      * 集群管理器
      */
     @Bean
-    public IClusterManager clusterManager(RedissonClient redissonClient) {
+    public ClusterManager clusterManager(RedissonClient redissonClient) {
         RTopic rTopic = redissonClient.getTopic("B-IM -> Cluster");
         RedissonClusterManager clusterManager = new RedissonClusterManager(rTopic);
         clusterHandlers.forEach(clusterManager::addClusterHandler);

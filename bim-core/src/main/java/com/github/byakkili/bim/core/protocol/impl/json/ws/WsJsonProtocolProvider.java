@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.json.ws;
 
 import com.github.byakkili.bim.core.protocol.BaseWsProtocolProvider;
-import com.github.byakkili.bim.core.protocol.CmdMsgChannelHandler;
+import com.github.byakkili.bim.core.protocol.CmdMsgHandler;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsgEncoder;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -23,7 +23,7 @@ public class WsJsonProtocolProvider extends BaseWsProtocolProvider {
                 new HttpObjectAggregator(1024),
                 new WebSocketServerProtocolHandler("/ws", true),
                 WsJsonCodec.INSTANCE,
-                CmdMsgChannelHandler.INSTANCE,
+                CmdMsgHandler.INSTANCE,
                 JsonMsgEncoder.INSTANCE
         };
     }

@@ -38,7 +38,7 @@ public class BimSessionUtils {
         BimSession session = get(channel);
         if (session == null) {
             session = new BimSession();
-            session.setId(channel.id().asLongText());
+            session.setId(channel.id().asShortText());
             session.setChannel(channel);
             session.setContext(context);
 

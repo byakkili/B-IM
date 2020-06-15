@@ -22,7 +22,7 @@ public class ChatCmdHandler extends BaseJsonCmdHandler<ChatReqMsg> {
     private AtomicLong chatReq = new AtomicLong(0);
 
     @Override
-    protected JsonMsg process(ChatReqMsg reqMsg, BimSession session) {
+    public JsonMsg handle(ChatReqMsg reqMsg, BimSession session) {
         ChatMsgType chatMsgType = ChatMsgType.of(reqMsg.getMsgType());
         ChatType chatType = ChatType.of(reqMsg.getChatType());
         if (chatType == null || chatMsgType == null || StrUtil.isBlank(reqMsg.getTo())) {
@@ -55,10 +55,5 @@ public class ChatCmdHandler extends BaseJsonCmdHandler<ChatReqMsg> {
     @Override
     public int cmd() {
         return Cmd.CHAT_REQ;
-    }
-
-    @Override
-    public Class<ChatReqMsg> reqMsgClass() {
-        return ChatReqMsg.class;
     }
 }

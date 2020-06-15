@@ -23,7 +23,7 @@ public class ProtocolDecoder extends SimpleChannelInboundHandler<ByteBuf> {
     /**
      * 协议提供者列表
      */
-    private final Set<IProtocolProvider> protocolProviders;
+    private final Set<ProtocolProvider> protocolProviders;
 
     public ProtocolDecoder(BimContext context) {
         super(false);
@@ -33,7 +33,7 @@ public class ProtocolDecoder extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf buffer) {
         // 获取协议提供者
-        IProtocolProvider protocolProvider = getProtocolProvider(buffer);
+        ProtocolProvider protocolProvider = getProtocolProvider(buffer);
         if (protocolProvider == null) {
             if (LOGGER.isWarnEnabled()) {
                 LOGGER.warn("Unsupported protocol type");
@@ -58,9 +58,9 @@ public class ProtocolDecoder extends SimpleChannelInboundHandler<ByteBuf> {
      * @param buffer 请求Buffer
      * @return 协议提供者
      */
-    private IProtocolProvider getProtocolProvider(ByteBuf buffer) {
+    private ProtocolProvider getProtocolProvider(ByteBuf buffer) {
         if (CollUtil.isNotEmpty(protocolProviders)) {
-            for (IProtocolProvider protocolProvider : protocolProviders) {
+            for (ProtocolProvider protocolProvider : protocolProviders) {
                 if (protocolProvider.isProtocol(buffer)) {
                     return protocolProvider;
                 }

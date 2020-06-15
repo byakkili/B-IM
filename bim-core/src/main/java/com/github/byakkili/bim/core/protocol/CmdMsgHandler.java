@@ -3,9 +3,9 @@ package com.github.byakkili.bim.core.protocol;
 import cn.hutool.core.collection.CollUtil;
 import com.github.byakkili.bim.core.BimContext;
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.cmd.ICmdHandler;
+import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
-import com.github.byakkili.bim.core.listener.ISessionListener;
+import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,44 +23,46 @@ import java.util.Map;
  */
 @ChannelHandler.Sharable
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFrame> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmdMsgChannelHandler.class);
+public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFrame> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmdMsgHandler.class);
     /**
      * 单例
      */
-    public static final CmdMsgChannelHandler INSTANCE = new CmdMsgChannelHandler();
+    public static final CmdMsgHandler INSTANCE = new CmdMsgHandler();
 
     @Override
+    @SuppressWarnings("unchecked")
     protected final void decode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
-        ISessionListener sessionListener = context.getSessionListener();
-        Map<Integer, ICmdHandler> cmdHandlers = context.getCmdHandlers();
+        SessionListener sessionListener = context.getSessionListener();
+        Map<Integer, CmdHandler> cmdHandlers = context.getCmdHandlers();
 
         if (sessionListener != null) {
             sessionListener.onRead(frame, session);
         }
 
-        RuntimeException ex = null;
-        CmdMsgFrame respFrame = null;
+        RuntimeException tmpEx = null;
+        Object respMsg = null;
+        Integer cmd = frame.getCmd();
         try {
-            if (!applyPreHandle(frame, session)) {
+            if (!applyPreHandle(cmd, session)) {
                 return;
             }
-            Integer cmd = frame.getCmd();
-            ICmdHandler cmdHandler = cmd == null ? null : cmdHandlers.get(cmd);
+            CmdHandler cmdHandler = cmdHandlers.get(cmd);
             if (cmdHandler == null) {
                 return;
             }
-            respFrame = cmdHandler.msgHandle(frame, session);
-            applyPostHandle(respFrame, session);
-        } catch (RuntimeException e) {
-            ex = e;
-            throw e;
+            Object msg = frame.getMsg();
+            respMsg = cmdHandler.handle(msg, session);
+            applyPostHandle(cmd, respMsg, session);
+        } catch (RuntimeException ex) {
+            tmpEx = ex;
+            throw ex;
         } finally {
-            triggerAfterCompletion(frame, session, ex);
-            if (respFrame != null) {
-                session.writeAndFlush(respFrame);
+            triggerAfterCompletion(cmd, session, tmpEx);
+            if (respMsg != null) {
+                session.writeAndFlush(respMsg);
             }
         }
     }
@@ -69,7 +71,7 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     protected final void encode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
-        ISessionListener sessionListener = context.getSessionListener();
+        SessionListener sessionListener = context.getSessionListener();
 
         if (sessionListener != null) {
             sessionListener.onWrite(frame, session);
@@ -80,15 +82,15 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     /**
      * 前置处理
      *
-     * @param reqFrame 请求帧
-     * @param session  会话
+     * @param cmd     CMD
+     * @param session 会话
      * @return 是否往下执行
      */
-    private boolean applyPreHandle(CmdMsgFrame reqFrame, BimSession session) {
+    private boolean applyPreHandle(int cmd, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
-                if (!interceptor.preHandle(reqFrame, session)) {
+                if (!interceptor.preHandle(cmd, session)) {
                     return false;
                 }
             }
@@ -99,37 +101,38 @@ public class CmdMsgChannelHandler extends MessageToMessageCodec<CmdMsgFrame, Cmd
     /**
      * 后置处理
      *
-     * @param respFrame 响应帧
-     * @param session   会话
+     * @param cmd     CMD
+     * @param msg     消息
+     * @param session 会话
      */
-    private void applyPostHandle(CmdMsgFrame respFrame, BimSession session) {
+    private void applyPostHandle(int cmd, Object msg, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
                 try {
-                    interceptor.postHandle(respFrame, session);
-                } catch (RuntimeException e) {
-                    LOGGER.error("CmdInterceptor.postHandle threw exception", e);
+                    interceptor.postHandle(cmd, msg, session);
+                } catch (Exception e) {
+                    LOGGER.error("CmdInterceptor.postHandle throw exception", e);
                 }
             }
         }
     }
 
     /**
-     * 完成后处罚
+     * 完成后处理
      *
-     * @param reqFrame 请求帧
-     * @param session  会话
-     * @param e        异常
+     * @param cmd     CMD
+     * @param session 会话
+     * @param e       异常
      */
-    private void triggerAfterCompletion(CmdMsgFrame reqFrame, BimSession session, Exception e) {
+    private void triggerAfterCompletion(int cmd, BimSession session, RuntimeException e) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
             for (CmdInterceptor interceptor : interceptors) {
                 try {
-                    interceptor.afterCompletion(reqFrame, session, e);
+                    interceptor.afterCompletion(cmd, session, e);
                 } catch (RuntimeException re) {
-                    LOGGER.error("CmdInterceptor.afterCompletion threw exception", re);
+                    LOGGER.error("CmdInterceptor.afterCompletion throw exception", re);
                 }
             }
         }

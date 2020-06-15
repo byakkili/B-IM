@@ -12,7 +12,7 @@ import com.google.protobuf.Message;
  */
 public class TestHandler extends BaseProtobufCmdHandler<Chat> {
     @Override
-    protected CmdMsgFrame<Message> handle(Chat msg, BimSession session) {
+    public CmdMsgFrame<Message> handle(Chat msg, BimSession session) {
         Chat respMsg = Chat.newBuilder()
                 .setCmd(Command.CHAT_ACK)
                 .setSeq(msg.getSeq())
@@ -27,10 +27,5 @@ public class TestHandler extends BaseProtobufCmdHandler<Chat> {
     @Override
     public int cmd() {
         return 0;
-    }
-
-    @Override
-    public Class<Chat> reqMsgClass() {
-        return Chat.class;
     }
 }

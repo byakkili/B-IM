@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandler;
  *
  * @author Guannian Li
  */
-public interface IProtocolProvider {
+public interface ProtocolProvider {
     /**
      * 当前协议的名称
      *

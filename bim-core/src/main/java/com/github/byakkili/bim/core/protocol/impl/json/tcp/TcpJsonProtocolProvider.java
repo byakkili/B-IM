@@ -1,8 +1,8 @@
 package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.github.byakkili.bim.core.protocol.CmdMsgChannelHandler;
-import com.github.byakkili.bim.core.protocol.IProtocolProvider;
+import com.github.byakkili.bim.core.protocol.CmdMsgHandler;
+import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsgEncoder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
  * @author Guannian Li
  */
 @EqualsAndHashCode
-public class TcpJsonProtocolProvider implements IProtocolProvider {
+public class TcpJsonProtocolProvider implements ProtocolProvider {
     @Override
     public String name() {
         return "TCP";
@@ -41,7 +41,7 @@ public class TcpJsonProtocolProvider implements IProtocolProvider {
                 // 协议1位, 长度4位, Json bytes
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
                 TcpJsonCodec.INSTANCE,
-                CmdMsgChannelHandler.INSTANCE,
+                CmdMsgHandler.INSTANCE,
                 JsonMsgEncoder.INSTANCE
         };
     }

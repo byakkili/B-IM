@@ -5,7 +5,7 @@ import com.github.byakkili.bim.core.BimContext;
 /**
  * @author Guannian Li
  */
-public interface IClusterManager {
+public interface ClusterManager {
     /**
      * 设置B-IM上下文
      *

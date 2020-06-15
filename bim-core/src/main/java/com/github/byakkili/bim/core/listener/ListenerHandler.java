@@ -22,7 +22,7 @@ public class ListenerHandler extends ChannelDuplexHandler {
     /**
      * 会话监听器
      */
-    private ISessionListener sessionListener;
+    private SessionListener sessionListener;
 
     public ListenerHandler(BimContext context) {
         this.context = context;

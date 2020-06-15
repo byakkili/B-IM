@@ -5,7 +5,7 @@ import com.github.byakkili.bim.core.BimContext;
 /**
  * @author Guannian Li
  */
-public interface IClusterHandler<T extends BaseClusterPacket> {
+public interface ClusterHandler<T extends BaseClusterPacket> {
     /**
      * 数据包名
      *
@@ -16,8 +16,8 @@ public interface IClusterHandler<T extends BaseClusterPacket> {
     /**
      * 处理
      *
-     * @param context       B-IM上下文
      * @param clusterPacket 数据包
+     * @param context       B-IM上下文
      */
-    void handle(BimContext context, T clusterPacket);
+    void handle(T clusterPacket, BimContext context);
 }

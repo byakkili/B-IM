@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Setter
 @Getter
-public abstract class BaseClusterManager implements IClusterManager {
+public abstract class BaseClusterManager implements ClusterManager {
     /**
      * B-IM 上下文
      */
@@ -21,14 +21,14 @@ public abstract class BaseClusterManager implements IClusterManager {
     /**
      * 集群处理器
      */
-    private final Map<String, IClusterHandler> clusterHandlers = new ConcurrentHashMap<>();
+    private final Map<String, ClusterHandler> clusterHandlers = new ConcurrentHashMap<>();
 
     /**
      * 添加集群处理器
      *
      * @param clusterHandler 集群处理器
      */
-    public void addClusterHandler(IClusterHandler clusterHandler) {
+    public void addClusterHandler(ClusterHandler clusterHandler) {
         if (clusterHandler != null) {
             getClusterHandlers().put(clusterHandler.packetClass().getName(), clusterHandler);
         }
@@ -44,9 +44,9 @@ public abstract class BaseClusterManager implements IClusterManager {
         if (CollUtil.isEmpty(clusterHandlers) || packet == null) {
             return;
         }
-        IClusterHandler handler = clusterHandlers.get(packet.getClass().getName());
+        ClusterHandler handler = clusterHandlers.get(packet.getClass().getName());
         if (handler != null) {
-            handler.handle(context, packet);
+            handler.handle(packet, context);
         }
     }
 }

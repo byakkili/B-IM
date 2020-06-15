@@ -1,23 +1,14 @@
-package com.github.byakkili.bim.core;
+package com.github.byakkili.bim.core.json;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
-import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
-import com.github.byakkili.bim.core.listener.ISessionListener;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
-import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCmdHandler;
-import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
+import com.github.byakkili.bim.core.BimConfiguration;
+import com.github.byakkili.bim.core.BimServerBootstrap;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonPacket;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.ws.WsJsonProtocolProvider;
 import com.github.byakkili.bim.core.util.JsonUtils;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
@@ -33,7 +24,6 @@ import java.net.Socket;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Guannian Li
@@ -41,15 +31,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class JsonServerTest {
     private int port;
-    private TestListener testListener;
-    private TestInterceptor testInterceptor;
+    private TestJsonListener testListener;
+    private TestJsonInterceptor testInterceptor;
     private BimServerBootstrap bootstrap;
 
     @Before
     public void init() {
         port = new LocalPortGenerater(10000).generate();
-        testListener = new TestListener();
-        testInterceptor = new TestInterceptor();
+        testListener = new TestJsonListener();
+        testInterceptor = new TestJsonInterceptor();
 
         BimConfiguration config = new BimConfiguration();
         config.setPort(port);
@@ -150,7 +140,7 @@ public class JsonServerTest {
                 InputStream inputStream = socket.getInputStream();
                 OutputStream outputStream = socket.getOutputStream()
         ) {
-            TestJsonMsg sendMsg = new TestJsonMsg(TestInterceptor.NO_ALLOW_CMD, 99L, "Hello, testing!");
+            TestJsonMsg sendMsg = new TestJsonMsg(TestJsonInterceptor.NO_ALLOW_CMD, 99L, "Hello, testing!");
             TcpJsonPacket sendPacket = new TcpJsonPacket(sendMsg);
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", JsonUtils.stringify(sendMsg));
@@ -160,125 +150,12 @@ public class JsonServerTest {
             TestJsonMsg receiveMsg = JsonUtils.deserialize(receivePacket.getData(), TestJsonMsg.class);
             log.info("Receive: {}", JsonUtils.stringify(receiveMsg));
 
-            Assert.assertTrue(ObjectUtil.equal(TestInterceptor.RESP_MSG, receiveMsg));
+            Assert.assertTrue(ObjectUtil.equal(TestJsonInterceptor.RESP_MSG, receiveMsg));
         }
     }
 
     @After
     public void close() {
         bootstrap.close();
-    }
-
-    @Setter
-    @Getter
-    @EqualsAndHashCode
-    @NoArgsConstructor
-    @AllArgsConstructor
-    static class TestJsonMsg implements JsonMsg {
-        private Integer cmd;
-        private Long seq;
-        private String content;
-    }
-
-    static class TestJsonCmdHandler extends BaseJsonCmdHandler<TestJsonMsg> {
-        static final Integer CMD = 1;
-        static final Integer CMD_ACK = 2;
-
-        @Override
-        protected JsonMsg process(TestJsonMsg reqMsg, BimSession session) {
-            reqMsg.setCmd(CMD_ACK);
-            return reqMsg;
-        }
-
-        @Override
-        public int cmd() {
-            return CMD;
-        }
-
-        @Override
-        public Class<TestJsonMsg> reqMsgClass() {
-            return TestJsonMsg.class;
-        }
-    }
-
-    @Slf4j
-    @Getter
-    static class TestListener implements ISessionListener {
-        private CountDownLatch countDownLatch = new CountDownLatch(4);
-        private AtomicInteger count = new AtomicInteger(0);
-
-        @Override
-        public void onRead(CmdMsgFrame frame, BimSession session) {
-            log.info("Session({}) read: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
-
-        @Override
-        public void onWrite(CmdMsgFrame frame, BimSession session) {
-            log.info("Session({}) write: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(frame.getMsg()));
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
-
-        @Override
-        public void onAfterCreated(BimSession session) {
-            log.info("Session({}) created.", session.getChannel().id().asShortText());
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
-
-        @Override
-        public void onBeforeDestroy(BimSession session) {
-            log.info("Session({}) destroy.", session.getChannel().id().asShortText());
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
-
-        @Override
-        public void onReaderIdle(BimSession session) {
-            log.info("Session({}) reader idle.", session.getChannel().id().asShortText());
-        }
-
-        @Override
-        public void onWriterIdle(BimSession session) {
-            log.info("Session({}) writer idle.", session.getChannel().id().asShortText());
-        }
-    }
-
-    @Slf4j
-    @Getter
-    static class TestInterceptor implements CmdInterceptor {
-        static final Integer NO_ALLOW_CMD = 100;
-        static final TestJsonMsg RESP_MSG = new TestJsonMsg(101, 403L, "Forbidden");
-
-        private CountDownLatch countDownLatch = new CountDownLatch(3);
-        private AtomicInteger count = new AtomicInteger(0);
-
-        @Override
-        public boolean preHandle(CmdMsgFrame reqFrame, BimSession session) {
-            log.info("Session({}) preHandle, reqMsg: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(reqFrame.getMsg()));
-            countDownLatch.countDown();
-            count.incrementAndGet();
-            if (ObjectUtil.equal(NO_ALLOW_CMD, reqFrame.getCmd())) {
-                session.writeAndFlush(RESP_MSG);
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public void postHandle(CmdMsgFrame respFrame, BimSession session) {
-            log.info("Session({}) postHandle, respMsg: {}", session.getChannel().id().asShortText(), JsonUtils.stringify(respFrame.getMsg()));
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
-
-        @Override
-        public void afterCompletion(CmdMsgFrame reqFrame, BimSession session, Exception e) {
-            log.info("Session({}) afterCompletion, exception: {}", session.getChannel().id().asShortText(), StrUtil.toString(e));
-            countDownLatch.countDown();
-            count.incrementAndGet();
-        }
     }
 }
