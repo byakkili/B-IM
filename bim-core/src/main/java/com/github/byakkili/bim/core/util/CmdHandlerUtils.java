@@ -27,7 +27,7 @@ public class CmdHandlerUtils {
         if (msgClass == null) {
             msgClass = find0(object, CmdHandler.class, "REQUEST");
 
-            Class<?> prevClass = CACHE.put(cmdHandlerClass, msgClass);
+            Class<?> prevClass = CACHE.putIfAbsent(cmdHandlerClass, msgClass);
             if (prevClass != null) {
                 msgClass = prevClass;
             }
