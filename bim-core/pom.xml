@@ -22,7 +22,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
-            <version>4.1.49.Final</version>
+            <version>4.1.50.Final</version>
         </dependency>
         <!-- Logger -->
         <dependency>
@@ -92,12 +92,12 @@
                 <version>0.6.1</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <clearOutputDirectory>false</clearOutputDirectory>
                     <outputDirectory>${project.build.testSourceDirectory}</outputDirectory>
                     <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
                     <protoTestSourceRoot>${project.build.testSourceDirectory}</protoTestSourceRoot>
-                    <protocArtifact>com.google.protobuf:protoc:3.11.4:exe:${os.detected.classifier}</protocArtifact>
-                    <clearOutputDirectory>false</clearOutputDirectory>
                     <temporaryProtoFileDirectory>${project.build.directory}/protoc-tmp</temporaryProtoFileDirectory>
+                    <protocArtifact>com.google.protobuf:protoc:3.11.4:exe:${os.detected.classifier}</protocArtifact>
                 </configuration>
                 <executions>
                     <execution>

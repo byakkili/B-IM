@@ -18,7 +18,7 @@
     <url>https://github.com/byakkili/B-IM</url>
 
     <properties>
-        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.8.RELEASE</spring-boot.version>
         <redisson.version>3.12.5</redisson.version>
     </properties>
 
@@ -47,12 +47,6 @@
             <artifactId>spring-boot-starter</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Spring boot starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- Redisson -->
         <dependency>
             <groupId>org.redisson</groupId>
@@ -78,8 +72,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
-                <type>pom</type>
                 <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>

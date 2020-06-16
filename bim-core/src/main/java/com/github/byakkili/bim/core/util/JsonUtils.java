@@ -34,6 +34,7 @@ public class JsonUtils {
     /**
      * JSON反序列化
      *
+     * @param <T>     类型
      * @param jsonStr JSON字符串
      * @param clazz   类型
      * @return 对象
@@ -63,6 +64,7 @@ public class JsonUtils {
     /**
      * 字节转对象
      *
+     * @param <T>   类型
      * @param bytes 字节
      * @param clazz 类型
      * @return 对象

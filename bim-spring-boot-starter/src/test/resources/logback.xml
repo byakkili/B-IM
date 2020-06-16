@@ -9,7 +9,7 @@
     </appender>
     <!-- Custom Log Configure -->
     <logger name="com.github.byakkili.bim.demo" level="DEBUG"/>
-    <logger name="io.netty.handler.logging.LoggingHandler" level="TRACE" />
+    <!--<logger name="io.netty.handler.logging.LoggingHandler" level="TRACE" />-->
     <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
