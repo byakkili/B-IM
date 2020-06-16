@@ -60,3 +60,32 @@ compile 'com.github.byakkili:bim-core:0.0.2'
 点击以下任一链接，下载`bim-core-0.0.2.jar`即可：
 - [Maven中央库1](https://repo1.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)
 - [Maven中央库2](http://repo2.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)
+
+-------------------------------------------------------------------------------
+
+## 使用 
+###### (可参考src/test/java下的demo)
+```java
+public class ServerStarter {
+    public static void main(String[] args) {
+        BimConfiguration config = new BimConfiguration();
+        config.setPort(9000); // 端口
+        config.setReaderTimeout(30); // 读超时30秒
+        config.setWriterTimeout(30); // 写超时30秒
+        config.setSessionListener(new TestSessionListener()); // 设置会话监听器
+        
+        // 添加协议提供者
+        config.addProtocolProvider(new WsProtobufProtocolProvider());
+        config.addProtocolProvider(new TcpProtobufProtocolProvider()); 
+        
+        config.addCmdHandler(new TestHandler()); // 添加命令处理器
+        config.addCmdInterceptors(new TestInterceptor()); // 添加命令拦截器
+        
+        BimServerBootstrap bootstrap = new BimServerBootstrap(config);
+        
+        bootstrap.start(); // 启动
+        
+        bootstrap.close(); // 关闭
+    }
+}
+```
