@@ -12,11 +12,10 @@ public interface CmdInterceptor {
      * 前置处理
      *
      * @param cmd     CMD
-     * @param reqMsg  请求消息
      * @param session 会话
      * @return 是否往下执行
      */
-    default boolean preHandle(Integer cmd, Object reqMsg, BimSession session) {
+    default boolean preHandle(int cmd, BimSession session) {
         return true;
     }
 
@@ -24,10 +23,10 @@ public interface CmdInterceptor {
      * 后置处理 (如果CmdHandler出现异常, 不会执行)
      *
      * @param cmd     CMD
+     * @param msg     消息
      * @param session 会话
-     * @param respMsg 响应消息
      */
-    default void postHandle(Integer cmd, BimSession session, Object respMsg) {
+    default void postHandle(int cmd, Object msg, BimSession session) {
         // ignore
     }
 
@@ -38,7 +37,7 @@ public interface CmdInterceptor {
      * @param session 会话
      * @param e       异常
      */
-    default void afterCompletion(Integer cmd, BimSession session, Exception e) {
+    default void afterCompletion(int cmd, BimSession session, Exception e) {
         // ignore
     }
 }

@@ -7,7 +7,7 @@
 
     <groupId>com.github.byakkili</groupId>
     <artifactId>bim-parent</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <name>${project.artifactId}</name>
     <description>IM Framework</description>
@@ -40,7 +40,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
     </dependencies>

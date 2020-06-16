@@ -1,5 +1,6 @@
 package com.github.byakkili.bim.core.util;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.io.IORuntimeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,14 +8,14 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
-import java.util.Map;
+import java.text.SimpleDateFormat;
 
 /**
  * @author Guannian Li
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtils {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER;
 
     /**
      * JSON序列化
@@ -33,12 +34,14 @@ public class JsonUtils {
     /**
      * JSON反序列化
      *
+     * @param <T>     类型
      * @param jsonStr JSON字符串
-     * @return Map对象
+     * @param clazz   类型
+     * @return 对象
      */
-    public static Map parseStr(String jsonStr) {
+    public static <T> T parse(String jsonStr, Class<T> clazz) {
         try {
-            return OBJECT_MAPPER.readValue(jsonStr, Map.class);
+            return OBJECT_MAPPER.readValue(jsonStr, clazz);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
@@ -61,14 +64,21 @@ public class JsonUtils {
     /**
      * 字节转对象
      *
+     * @param <T>   类型
      * @param bytes 字节
-     * @return Map对象
+     * @param clazz 类型
+     * @return 对象
      */
-    public static Map deserialize(byte[] bytes) {
+    public static <T> T deserialize(byte[] bytes, Class<T> clazz) {
         try {
-            return OBJECT_MAPPER.readValue(bytes, Map.class);
+            return OBJECT_MAPPER.readValue(bytes, clazz);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    static {
+        OBJECT_MAPPER = new ObjectMapper();
+        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DatePattern.NORM_DATETIME_PATTERN));
     }
 }

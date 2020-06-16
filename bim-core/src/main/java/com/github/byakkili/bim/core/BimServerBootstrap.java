@@ -19,12 +19,15 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Guannian Li
  */
 @Setter
 @Getter
-public class BimServerBootstrap {
+public class BimServerBootstrap implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(BimServerBootstrap.class);
     private static final LoggingHandler DEBUG_LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
     private static final LoggingHandler TRACE_LOGGING_HANDLER = new LoggingHandler(LogLevel.TRACE);
@@ -58,8 +61,10 @@ public class BimServerBootstrap {
         bootstrap.childHandler(new ChannelInitializer<Channel>() {
             @Override
             protected void initChannel(Channel channel) {
+                if (readerTimeout != 0 || writerTimeout != 0) {
+                    channel.pipeline().addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0, TimeUnit.SECONDS));
+                }
                 channel.pipeline().addLast(TRACE_LOGGING_HANDLER);
-                channel.pipeline().addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0));
                 channel.pipeline().addLast(listenerHandler);
                 channel.pipeline().addLast(protocolDecoder);
             }
@@ -78,20 +83,26 @@ public class BimServerBootstrap {
     /**
      * 关闭
      */
-    private synchronized void close() {
-        EventLoopGroup bossGroup = bootstrap.config().group();
+    @Override
+    public synchronized void close() {
         EventLoopGroup workerGroup = bootstrap.config().childGroup();
+        if (workerGroup != null && !workerGroup.isShuttingDown() && !workerGroup.isShutdown()) {
+            try {
+                workerGroup.shutdownGracefully().get();
+            } catch (Exception e) {
+                LOGGER.error("Error shutting down worker group.", e);
+            }
+        }
+        EventLoopGroup bossGroup = bootstrap.config().group();
         if (bossGroup != null && !bossGroup.isShuttingDown() && !bossGroup.isShutdown()) {
             bossGroup.shutdownGracefully();
-        }
-        if (workerGroup != null && !workerGroup.isShuttingDown() && !workerGroup.isShutdown()) {
-            workerGroup.shutdownGracefully();
         }
     }
 
     private ServerBootstrap defaultServerBootstrap() {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("bim-boss"));
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("bim-worker"));
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup);
         serverBootstrap.channel(NioServerSocketChannel.class);

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @author Guannian Li
  */
 @EqualsAndHashCode
-public abstract class BaseWsProtocolProvider implements IProtocolProvider {
+public abstract class BaseWsProtocolProvider implements ProtocolProvider {
     private static final Pattern UPGRADE_PATTERN = Pattern.compile("^Upgrade: websocket$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
     private static final Pattern SEC_WEB_SOCKET_VERSION_PATTERN = Pattern.compile("^Sec-WebSocket-Version: \\d+$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 

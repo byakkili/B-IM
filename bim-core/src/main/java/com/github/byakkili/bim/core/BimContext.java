@@ -2,7 +2,7 @@ package com.github.byakkili.bim.core;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.github.byakkili.bim.core.cluster.BaseClusterPacket;
-import com.github.byakkili.bim.core.cluster.IClusterManager;
+import com.github.byakkili.bim.core.cluster.ClusterManager;
 import com.github.byakkili.bim.core.maintain.Groups;
 import com.github.byakkili.bim.core.maintain.Users;
 import lombok.Getter;
@@ -97,7 +97,7 @@ public class BimContext extends BimConfiguration {
      * @return 是否发送成功
      */
     public boolean sendToCluster(BaseClusterPacket clusterPacket) {
-        IClusterManager clusterManager = getClusterManager();
+        ClusterManager clusterManager = getClusterManager();
         if (clusterManager == null) {
             return false;
         }

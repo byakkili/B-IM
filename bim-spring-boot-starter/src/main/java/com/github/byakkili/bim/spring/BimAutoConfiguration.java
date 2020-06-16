@@ -3,11 +3,11 @@ package com.github.byakkili.bim.spring;
 import cn.hutool.core.collection.CollUtil;
 import com.github.byakkili.bim.core.BimConfiguration;
 import com.github.byakkili.bim.core.BimServerBootstrap;
-import com.github.byakkili.bim.core.cluster.IClusterManager;
-import com.github.byakkili.bim.core.cmd.ICmdHandler;
+import com.github.byakkili.bim.core.cluster.ClusterManager;
+import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
-import com.github.byakkili.bim.core.listener.ISessionListener;
-import com.github.byakkili.bim.core.protocol.IProtocolProvider;
+import com.github.byakkili.bim.core.listener.SessionListener;
+import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,15 +28,15 @@ public class BimAutoConfiguration {
     @Autowired(required = false)
     private ServerBootstrap serverBootstrap;
     @Autowired(required = false)
-    private IClusterManager clusterManager;
+    private ClusterManager clusterManager;
     @Autowired(required = false)
-    private ISessionListener sessionListener;
+    private SessionListener sessionListener;
     @Autowired(required = false)
-    private List<ICmdHandler> cmdHandlers;
+    private List<CmdHandler> cmdHandlers;
     @Autowired(required = false)
     private List<CmdInterceptor> cmdInterceptors;
     @Autowired(required = false)
-    private List<IProtocolProvider> protocolProviders;
+    private List<ProtocolProvider> protocolProviders;
 
     @Bean
     public BimConfiguration configuration() {
@@ -56,11 +56,18 @@ public class BimAutoConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "close")
-    public BimServerBootstrap serverBootstrap() {
-        BimServerBootstrap bimServerBootstrap = new BimServerBootstrap(configuration());
+    public BimServerBootstrap serverBootstrap(BimConfiguration configuration) {
+        BimServerBootstrap bimServerBootstrap = new BimServerBootstrap(configuration);
         if (serverBootstrap != null) {
             bimServerBootstrap.setBootstrap(serverBootstrap);
         }
         return bimServerBootstrap;
+    }
+
+    @Bean
+    public BimCloseLifecycle bimLifecycle(BimServerBootstrap serverBootstrap) {
+        BimCloseLifecycle bimCloseLifecycle = new BimCloseLifecycle();
+        bimCloseLifecycle.setBimServerBootstrap(serverBootstrap);
+        return bimCloseLifecycle;
     }
 }
