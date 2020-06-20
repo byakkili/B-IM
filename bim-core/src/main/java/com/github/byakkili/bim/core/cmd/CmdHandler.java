@@ -6,7 +6,7 @@ import com.github.byakkili.bim.core.BimSession;
 /**
  * @author Guannian Li
  */
-public abstract class CmdHandler<REQUEST, RESPONSE> {
+public abstract class CmdHandler<I, O> {
     /**
      * Command
      *
@@ -21,5 +21,5 @@ public abstract class CmdHandler<REQUEST, RESPONSE> {
      * @param session 会话
      * @return RESPONSE
      */
-    public abstract RESPONSE handle(REQUEST msg, BimSession session);
+    public abstract O handle(I msg, BimSession session);
 }
