@@ -48,7 +48,7 @@ public class ListenerHandler extends ChannelDuplexHandler {
             sessionListener.onBeforeDestroy(session);
         }
         session.unbind();
-        session.close();
+        BimSessionUtils.destroy(session);
     }
 
     @Override

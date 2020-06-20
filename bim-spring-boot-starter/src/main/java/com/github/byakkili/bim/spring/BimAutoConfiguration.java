@@ -25,6 +25,7 @@ import java.util.List;
 public class BimAutoConfiguration {
     @Autowired
     private BimProperties properties;
+
     @Autowired(required = false)
     private ServerBootstrap serverBootstrap;
     @Autowired(required = false)
@@ -32,36 +33,27 @@ public class BimAutoConfiguration {
     @Autowired(required = false)
     private SessionListener sessionListener;
     @Autowired(required = false)
-    private List<CmdHandler> cmdHandlers;
-    @Autowired(required = false)
     private List<CmdInterceptor> cmdInterceptors;
-    @Autowired(required = false)
-    private List<ProtocolProvider> protocolProviders;
 
     @Bean
-    public BimConfiguration configuration() {
-        Assert.notEmpty(cmdHandlers, "Cmd handler not found.");
-        Assert.notEmpty(protocolProviders, "Protocol provider not found.");
-
+    public BimConfiguration configuration(List<CmdHandler> cmdHandlers, List<ProtocolProvider> protocolProviders) {
         BimConfiguration config = new BimConfiguration();
         config.setPort(properties.getPort());
         config.setReaderTimeout(properties.getReaderTimeout());
         config.setWriterTimeout(properties.getWriterTimeout());
         config.setClusterManager(clusterManager);
         config.setSessionListener(sessionListener);
-        config.getCmdInterceptors().addAll(CollUtil.emptyIfNull(cmdInterceptors));
-        cmdHandlers.forEach(config::addCmdHandler);
-        protocolProviders.forEach(config::addProtocolProvider);
+
+        CollUtil.emptyIfNull(cmdHandlers).forEach(config::addCmdHandler);
+        CollUtil.emptyIfNull(cmdInterceptors).forEach(config::addCmdInterceptors);
+        CollUtil.emptyIfNull(protocolProviders).forEach(config::addProtocolProvider);
+
         return config;
     }
 
     @Bean(initMethod = "start", destroyMethod = "close")
     public BimServerBootstrap serverBootstrap(BimConfiguration configuration) {
-        BimServerBootstrap bimServerBootstrap = new BimServerBootstrap(configuration);
-        if (serverBootstrap != null) {
-            bimServerBootstrap.setBootstrap(serverBootstrap);
-        }
-        return bimServerBootstrap;
+        return new BimServerBootstrap(configuration, serverBootstrap);
     }
 
     @Bean

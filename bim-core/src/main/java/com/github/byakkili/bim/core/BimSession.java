@@ -16,19 +16,19 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode
-public class BimSession implements Closeable {
+public class BimSession {
     /**
      * 会话ID
      */
-    private String id;
-    /**
-     * B-IM上下文
-     */
-    private BimContext context;
+    private final String id;
     /**
      * 通道
      */
-    private Channel channel;
+    private final Channel channel;
+    /**
+     * B-IM上下文
+     */
+    private final BimContext context;
     /**
      * 协议
      */
@@ -45,6 +45,12 @@ public class BimSession implements Closeable {
      * Token
      */
     private String token;
+
+    public BimSession(Channel channel, BimContext context) {
+        this.id = channel.id().asShortText();
+        this.channel = channel;
+        this.context = context;
+    }
 
     // ---------------------------------------------------------------------------------------------- Public method start
 
@@ -106,15 +112,10 @@ public class BimSession implements Closeable {
     /**
      * 关闭
      */
-    @Override
     public synchronized void close() {
-        id = null;
-        context = null;
-        channel = null;
-        protocol = null;
-        userId = null;
-        groupIds = null;
-        token = null;
+        if (channel != null && channel.isActive()) {
+            channel.close();
+        }
     }
 
     // ---------------------------------------------------------------------------------------------- Public method end

@@ -40,6 +40,6 @@ public class Groups extends BaseObjectBind<BimSession> {
      * @return 群组会话
      */
     public Set<BimSession> getSessions(String groupId) {
-        return getObjectMap().get(groupId);
+        return getStrSetMap().get(groupId);
     }
 }

@@ -1,8 +1,10 @@
 package com.github.byakkili.bim.core;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.byakkili.bim.core.listener.ListenerHandler;
 import com.github.byakkili.bim.core.protocol.ProtocolDecoder;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -15,34 +17,39 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Closeable;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Guannian Li
  */
-@Setter
-@Getter
-public class BimServerBootstrap implements Closeable {
+public class BimServerBootstrap {
     private static final Logger LOGGER = LoggerFactory.getLogger(BimServerBootstrap.class);
     private static final LoggingHandler DEBUG_LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-    private static final LoggingHandler TRACE_LOGGING_HANDLER = new LoggingHandler(LogLevel.TRACE);
     /**
      * B-IM上下文
      */
-    private final BimContext context;
+    private final @Getter BimContext context;
     /**
-     * Netty Server Bootstrap
+     * Netty server bootstrap
      */
     private ServerBootstrap bootstrap;
 
+    private Channel channel;
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+
     public BimServerBootstrap(BimConfiguration config) {
+        this(config, null);
+    }
+
+    public BimServerBootstrap(BimConfiguration config, ServerBootstrap bootstrap) {
         this.context = new BimContext(config);
-        this.bootstrap = defaultServerBootstrap();
+        this.bootstrap = bootstrap != null ? bootstrap : defaultServerBootstrap();
+        this.bossGroup = this.bootstrap.config().group();
+        this.workerGroup = this.bootstrap.config().childGroup();
         if (this.context.getClusterManager() != null) {
             this.context.getClusterManager().setContext(this.context);
         }
@@ -61,18 +68,18 @@ public class BimServerBootstrap implements Closeable {
         bootstrap.childHandler(new ChannelInitializer<Channel>() {
             @Override
             protected void initChannel(Channel channel) {
-                if (readerTimeout != 0 || writerTimeout != 0) {
-                    channel.pipeline().addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0, TimeUnit.SECONDS));
-                }
-                channel.pipeline().addLast(TRACE_LOGGING_HANDLER);
-                channel.pipeline().addLast(listenerHandler);
-                channel.pipeline().addLast(protocolDecoder);
+                channel.pipeline()
+                        .addLast(DEBUG_LOGGING_HANDLER)
+                        .addLast(new IdleStateHandler(readerTimeout, writerTimeout, 0, TimeUnit.SECONDS))
+                        .addLast(listenerHandler)
+                        .addLast(protocolDecoder);
             }
         });
 
         int port = context.getPort();
-        ChannelFuture channelFuture = bootstrap.bind(port).syncUninterruptibly();
-        channelFuture.channel().closeFuture().addListener(future -> close());
+        ChannelFuture channelFuture = bootstrap.bind(port);
+        channelFuture.syncUninterruptibly();
+        channel = channelFuture.channel();
 
         LOGGER.info("B-IM started on port(s): {}", port);
         LOGGER.info("B-IM reader timeout: {}", readerTimeout > 0 ? readerTimeout + "s" : "off");
@@ -83,19 +90,31 @@ public class BimServerBootstrap implements Closeable {
     /**
      * 关闭
      */
-    @Override
     public synchronized void close() {
-        EventLoopGroup workerGroup = bootstrap.config().childGroup();
-        if (workerGroup != null && !workerGroup.isShuttingDown() && !workerGroup.isShutdown()) {
-            try {
-                workerGroup.shutdownGracefully().get();
-            } catch (Exception e) {
-                LOGGER.error("Error shutting down worker group.", e);
-            }
+        try {
+            channel.close();
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
         }
-        EventLoopGroup bossGroup = bootstrap.config().group();
-        if (bossGroup != null && !bossGroup.isShuttingDown() && !bossGroup.isShutdown()) {
-            bossGroup.shutdownGracefully();
+        try {
+            context.getUsers().getStrSetMap().values().forEach(sessions -> {
+                if (CollUtil.isNotEmpty(sessions)) {
+                    sessions.forEach(BimSession::close);
+                }
+            });
+            context.getGroups().getStrSetMap().values().forEach(sessions -> {
+                if (CollUtil.isNotEmpty(sessions)) {
+                    sessions.forEach(BimSession::close);
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+        try {
+            bossGroup.shutdownGracefully().syncUninterruptibly();
+            workerGroup.shutdownGracefully().syncUninterruptibly();
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 
@@ -103,12 +122,12 @@ public class BimServerBootstrap implements Closeable {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("bim-boss"));
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("bim-worker"));
 
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(bossGroup, workerGroup);
-        serverBootstrap.channel(NioServerSocketChannel.class);
-        serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-        serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
-        serverBootstrap.handler(DEBUG_LOGGING_HANDLER);
-        return serverBootstrap;
+        return new ServerBootstrap()
+                .group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .handler(DEBUG_LOGGING_HANDLER);
     }
 }

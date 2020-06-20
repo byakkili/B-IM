@@ -33,6 +33,6 @@ public class Users extends BaseObjectBind<BimSession> {
      * @return 用户会话
      */
     public Set<BimSession> getSessions(String userId) {
-        return getObjectMap().get(userId);
+        return getStrSetMap().get(userId);
     }
 }

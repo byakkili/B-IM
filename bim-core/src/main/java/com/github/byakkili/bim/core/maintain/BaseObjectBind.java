@@ -13,9 +13,9 @@ import java.util.Set;
 @Getter
 public abstract class BaseObjectBind<T> {
     /**
-     * key, value
+     * key, set
      */
-    private ReadWriteLockMap<String, Set<T>> objectMap = new ReadWriteLockMap<>();
+    private ReadWriteLockMap<String, Set<T>> strSetMap = new ReadWriteLockMap<>();
 
     /**
      * 绑定
@@ -28,10 +28,10 @@ public abstract class BaseObjectBind<T> {
         if (StrUtil.isBlank(key)) {
             return false;
         }
-        Set<T> objects = objectMap.get(key);
+        Set<T> objects = strSetMap.get(key);
         if (objects == null) {
             objects = new ConcurrentHashSet<>();
-            Set<T> previousValue = objectMap.putIfAbsent(key, objects);
+            Set<T> previousValue = strSetMap.putIfAbsent(key, objects);
             if (previousValue != null) {
                 objects = previousValue;
             }
@@ -50,17 +50,17 @@ public abstract class BaseObjectBind<T> {
         if (StrUtil.isBlank(key)) {
             return false;
         }
-        objectMap.getWriteLock().lock();
+        strSetMap.getWriteLock().lock();
         try {
-            Set<T> objects = objectMap.get(key);
+            Set<T> objects = strSetMap.get(key);
             if (objects != null && objects.remove(object)) {
                 if (objects.isEmpty()) {
-                    objectMap.remove(key);
+                    strSetMap.remove(key);
                 }
                 return true;
             }
         } finally {
-            objectMap.getWriteLock().unlock();
+            strSetMap.getWriteLock().unlock();
         }
         return false;
     }

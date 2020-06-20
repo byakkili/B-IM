@@ -37,16 +37,25 @@ public class BimSessionUtils {
     public static BimSession init(Channel channel, BimContext context) {
         BimSession session = get(channel);
         if (session == null) {
-            session = new BimSession();
-            session.setId(channel.id().asShortText());
-            session.setChannel(channel);
-            session.setContext(context);
+            session = new BimSession(channel, context);
 
             Object prevObj = channel.attr(SESSION_ATTR).setIfAbsent(session);
             if (prevObj != null) {
-                return (BimSession) prevObj;
+                session = (BimSession) prevObj;
             }
         }
         return session;
+    }
+
+    /**
+     * 销毁会话
+     *
+     * @param session 会话
+     */
+    public static void destroy(BimSession session) {
+        session.setToken(null);
+        session.setUserId(null);
+        session.setGroupIds(null);
+        session.setProtocol(null);
     }
 }

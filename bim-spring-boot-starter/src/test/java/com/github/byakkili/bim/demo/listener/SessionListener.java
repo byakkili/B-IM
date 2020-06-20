@@ -36,8 +36,8 @@ public class SessionListener implements com.github.byakkili.bim.core.listener.Se
     @Override
     public void onReaderIdle(BimSession session) {
         log.info("会话: {}, 读超时, {}s", session.getId(), session.getContext().getReaderTimeout());
-        // 关闭客户端
-        session.getChannel().close();
+        // 关闭会话
+        session.close();
     }
 
     @Override
