@@ -4,7 +4,7 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.LocalPortGenerater;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.byakkili.bim.core.BimConfiguration;
-import com.github.byakkili.bim.core.BimServerBootstrap;
+import com.github.byakkili.bim.core.BimNettyServer;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonPacket;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.ws.WsJsonProtocolProvider;
@@ -33,7 +33,7 @@ public class JsonServerTest {
     private int port;
     private TestJsonListener testListener;
     private TestJsonInterceptor testInterceptor;
-    private BimServerBootstrap bootstrap;
+    private BimNettyServer bimNettyServer;
 
     @Before
     public void init() {
@@ -52,8 +52,8 @@ public class JsonServerTest {
         config.addCmdInterceptors(testInterceptor);
 
         // 启动
-        bootstrap = new BimServerBootstrap(config);
-        bootstrap.start();
+        bimNettyServer = new BimNettyServer(config);
+        bimNettyServer.start();
     }
 
     @Test
@@ -156,6 +156,6 @@ public class JsonServerTest {
 
     @After
     public void close() {
-        bootstrap.close();
+        bimNettyServer.close();
     }
 }

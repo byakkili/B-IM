@@ -81,11 +81,11 @@ public class ServerStarter {
         config.addCmdHandler(new TestHandler()); // 添加命令处理器
         config.addCmdInterceptors(new TestInterceptor()); // 添加命令拦截器
         
-        BimServerBootstrap bootstrap = new BimServerBootstrap(config);
+        BimNettyServer bimNettyServer = new BimNettyServer(config);
         
-        bootstrap.start(); // 启动
+        bimNettyServer.start(); // 启动
         
-        bootstrap.close(); // 关闭
+        bimNettyServer.close(); // 关闭
     }
 }
 ```

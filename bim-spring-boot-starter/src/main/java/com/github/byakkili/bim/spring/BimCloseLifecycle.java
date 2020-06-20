@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.spring;
 
-import com.github.byakkili.bim.core.BimServerBootstrap;
+import com.github.byakkili.bim.core.BimNettyServer;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import org.springframework.context.Phased;
 public class BimCloseLifecycle implements Phased, Lifecycle {
     private volatile boolean running = true;
 
-    private BimServerBootstrap bimServerBootstrap;
+    private BimNettyServer bimNettyServer;
 
     @Override
     public synchronized void start() {
@@ -28,7 +28,7 @@ public class BimCloseLifecycle implements Phased, Lifecycle {
     public synchronized void stop() {
         if (isRunning()) {
             running = false;
-            bimServerBootstrap.close();
+            bimNettyServer.close();
         }
     }
 

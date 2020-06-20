@@ -1,6 +1,7 @@
 package com.github.byakkili.bim.core;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.TimeInterval;
 import com.github.byakkili.bim.core.listener.ListenerHandler;
 import com.github.byakkili.bim.core.protocol.ProtocolDecoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -25,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Guannian Li
  */
-public class BimServerBootstrap {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BimServerBootstrap.class);
+public class BimNettyServer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BimNettyServer.class);
     private static final LoggingHandler DEBUG_LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
     /**
      * B-IM上下文
@@ -41,11 +42,11 @@ public class BimServerBootstrap {
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public BimServerBootstrap(BimConfiguration config) {
+    public BimNettyServer(BimConfiguration config) {
         this(config, null);
     }
 
-    public BimServerBootstrap(BimConfiguration config, ServerBootstrap bootstrap) {
+    public BimNettyServer(BimConfiguration config, ServerBootstrap bootstrap) {
         this.context = new BimContext(config);
         this.bootstrap = bootstrap != null ? bootstrap : defaultServerBootstrap();
         this.bossGroup = this.bootstrap.config().group();
@@ -91,6 +92,11 @@ public class BimServerBootstrap {
      * 关闭
      */
     public synchronized void close() {
+        if (!channel.isOpen()) {
+            return;
+        }
+        TimeInterval timeInterval = new TimeInterval();
+        LOGGER.info("Staring shutting down BimNettyServer");
         try {
             channel.close();
         } catch (Exception e) {
@@ -116,6 +122,7 @@ public class BimServerBootstrap {
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
+        LOGGER.info("BimNettyServer has been shut down in {} seconds", timeInterval.intervalMs() / 1000.0);
     }
 
     private ServerBootstrap defaultServerBootstrap() {

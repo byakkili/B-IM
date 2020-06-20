@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.demo;
 
 import com.github.byakkili.bim.core.BimConfiguration;
-import com.github.byakkili.bim.core.BimServerBootstrap;
+import com.github.byakkili.bim.core.BimNettyServer;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.tcp.TcpProtobufProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.ws.WsProtobufProtocolProvider;
 
@@ -27,11 +27,11 @@ public class ServerStarter {
         config.addCmdHandler(new TestHandler());
 
         // 启动
-        BimServerBootstrap bootstrap = new BimServerBootstrap(config);
-        bootstrap.start();
+        BimNettyServer bimNettyServer = new BimNettyServer(config);
+        bimNettyServer.start();
 
         new Scanner(System.in).next();
         // 关闭
-        bootstrap.close();
+        bimNettyServer.close();
     }
 }

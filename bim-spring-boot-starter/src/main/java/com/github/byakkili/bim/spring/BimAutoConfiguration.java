@@ -2,18 +2,16 @@ package com.github.byakkili.bim.spring;
 
 import cn.hutool.core.collection.CollUtil;
 import com.github.byakkili.bim.core.BimConfiguration;
-import com.github.byakkili.bim.core.BimServerBootstrap;
+import com.github.byakkili.bim.core.BimNettyServer;
 import com.github.byakkili.bim.core.cluster.ClusterManager;
 import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
 import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.protocol.ProtocolProvider;
-import io.netty.bootstrap.ServerBootstrap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -26,8 +24,6 @@ public class BimAutoConfiguration {
     @Autowired
     private BimProperties properties;
 
-    @Autowired(required = false)
-    private ServerBootstrap serverBootstrap;
     @Autowired(required = false)
     private ClusterManager clusterManager;
     @Autowired(required = false)
@@ -52,14 +48,14 @@ public class BimAutoConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "close")
-    public BimServerBootstrap serverBootstrap(BimConfiguration configuration) {
-        return new BimServerBootstrap(configuration, serverBootstrap);
+    public BimNettyServer bimNettyServer(BimConfiguration configuration) {
+        return new BimNettyServer(configuration);
     }
 
     @Bean
-    public BimCloseLifecycle bimLifecycle(BimServerBootstrap serverBootstrap) {
+    public BimCloseLifecycle bimLifecycle(BimNettyServer nettyServer) {
         BimCloseLifecycle bimCloseLifecycle = new BimCloseLifecycle();
-        bimCloseLifecycle.setBimServerBootstrap(serverBootstrap);
+        bimCloseLifecycle.setBimNettyServer(nettyServer);
         return bimCloseLifecycle;
     }
 }
