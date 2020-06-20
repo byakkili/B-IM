@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.demo.dto;
 
-import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
+import com.github.byakkili.bim.protocol.json.JsonMsg;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
