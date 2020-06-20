@@ -47,19 +47,19 @@ B-IM是用JAVA语言，基于Netty实现的轻量级、高性能的IM即时通�
 <dependency>
     <groupId>com.github.byakkili</groupId>
     <artifactId>bim-core</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-compile 'com.github.byakkili:bim-core:0.0.2'
+compile 'com.github.byakkili:bim-core:0.0.3-SNAPSHOT'
 ```
 
 ### 非Maven项目
-点击以下任一链接，下载`bim-core-0.0.2.jar`即可：
-- [Maven中央库1](https://repo1.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)
-- [Maven中央库2](http://repo2.maven.org/maven2/com/github/byakkili/bim-core/0.0.2/)
+点击以下任一链接，下载`bim-core-0.0.3-SNAPSHOT.jar`即可：
+- [Maven中央库1](https://repo1.maven.org/maven2/com/github/byakkili/bim-core/0.0.3-SNAPSHOT/)
+- [Maven中央库2](http://repo2.maven.org/maven2/com/github/byakkili/bim-core/0.0.3-SNAPSHOT/)
 
 -------------------------------------------------------------------------------
 
