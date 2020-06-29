@@ -1,10 +1,10 @@
 package com.github.byakkili.bim.demo.config;
 
-import com.github.byakkili.bim.cluster.redisson.RedissonClusterManager;
 import com.github.byakkili.bim.core.cluster.ClusterHandler;
 import com.github.byakkili.bim.core.cluster.ClusterManager;
-import com.github.byakkili.bim.protocol.json.tcp.TcpJsonProtocolProvider;
-import com.github.byakkili.bim.protocol.json.ws.WsJsonProtocolProvider;
+import com.github.byakkili.bim.core.cluster.redisson.RedissonClusterManager;
+import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonProtocolProvider;
+import com.github.byakkili.bim.core.protocol.impl.json.ws.WsJsonProtocolProvider;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;

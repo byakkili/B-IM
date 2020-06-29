@@ -70,13 +70,6 @@
     </issueManagement>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.6.2</version>
-            </extension>
-        </extensions>
         <plugins>
             <!-- Compiler -->
             <plugin>
@@ -87,30 +80,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <!-- Protobuf compiler -->
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <clearOutputDirectory>false</clearOutputDirectory>
-                    <outputDirectory>${project.build.testSourceDirectory}</outputDirectory>
-                    <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
-                    <protoTestSourceRoot>${project.build.testSourceDirectory}</protoTestSourceRoot>
-                    <temporaryProtoFileDirectory>${project.build.directory}/protoc-tmp</temporaryProtoFileDirectory>
-                    <protocArtifact>com.google.protobuf:protoc:3.11.4:exe:${os.detected.classifier}</protocArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>protobuf-testCompile</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

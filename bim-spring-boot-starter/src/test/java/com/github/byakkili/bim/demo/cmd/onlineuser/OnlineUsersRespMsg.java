@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.demo.cmd.onlineuser;
 
-import com.github.byakkili.bim.protocol.json.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.dto.UserInfo;
 import com.github.byakkili.bim.demo.constant.Cmd;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.demo.cmd.auth;
 
-import com.github.byakkili.bim.protocol.json.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.constant.Cmd;
 import lombok.Getter;
 import lombok.Setter;

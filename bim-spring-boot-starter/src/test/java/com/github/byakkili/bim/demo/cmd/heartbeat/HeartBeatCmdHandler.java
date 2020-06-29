@@ -1,8 +1,8 @@
 package com.github.byakkili.bim.demo.cmd.heartbeat;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.protocol.json.BaseJsonCmdHandler;
-import com.github.byakkili.bim.protocol.json.JsonMsg;
+import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCmdHandler;
+import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.constant.Cmd;
 import com.github.byakkili.bim.demo.dto.AckMsg;
 import com.github.byakkili.bim.demo.dto.SimpleMsg;

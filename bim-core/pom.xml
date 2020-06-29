@@ -22,7 +22,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
-            <version>4.1.48.Final</version>
+            <version>4.1.50.Final</version>
         </dependency>
         <!-- Logger -->
         <dependency>
@@ -34,22 +34,22 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.3</version>
+            <version>2.10.4</version>
         </dependency>
         <!-- HuTool -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
-            <version>5.3.8</version>
+            <version>5.3.7</version>
         </dependency>
-        <!-- Protobuf (Optional) -->
+        <!-- ProtoBuf -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>3.11.4</version>
             <optional>true</optional>
         </dependency>
-        <!-- Redisson (Optional) -->
+        <!-- Redisson -->
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
@@ -57,21 +57,18 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Logback (Test) -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
             <scope>test</scope>
         </dependency>
-        <!-- WebSocket (Test) -->
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.1</version>
             <scope>test</scope>
         </dependency>
-        <!-- Protobuf Format (Test) -->
         <dependency>
             <groupId>com.googlecode.protobuf-java-format</groupId>
             <artifactId>protobuf-java-format</artifactId>
@@ -80,4 +77,38 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.6.2</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <clearOutputDirectory>false</clearOutputDirectory>
+                    <outputDirectory>${project.build.testSourceDirectory}</outputDirectory>
+                    <protoSourceRoot>${project.build.testSourceDirectory}</protoSourceRoot>
+                    <protoTestSourceRoot>${project.build.testSourceDirectory}</protoTestSourceRoot>
+                    <temporaryProtoFileDirectory>${project.build.directory}/protoc-tmp</temporaryProtoFileDirectory>
+                    <protocArtifact>com.google.protobuf:protoc:3.11.4:exe:${os.detected.classifier}</protocArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>protobuf-testCompile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
