@@ -1,5 +1,6 @@
-package com.github.byakkili.bim.core.protocol;
+package com.github.byakkili.bim.core.protocol.impl;
 
+import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import io.netty.buffer.ByteBuf;
 import lombok.EqualsAndHashCode;
 

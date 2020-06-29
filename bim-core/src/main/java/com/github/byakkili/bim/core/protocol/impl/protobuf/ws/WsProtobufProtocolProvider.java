@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.core.protocol.impl.protobuf.ws;
 
-import com.github.byakkili.bim.core.protocol.BaseWsProtocolProvider;
+import com.github.byakkili.bim.core.protocol.impl.BaseWsProtocolProvider;
 import com.github.byakkili.bim.core.protocol.CmdMsgHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.handler.codec.http.HttpObjectAggregator;

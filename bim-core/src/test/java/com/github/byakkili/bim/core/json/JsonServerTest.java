@@ -157,5 +157,6 @@ public class JsonServerTest {
     @After
     public void close() {
         bimNettyServer.close();
+        System.out.println();
     }
 }

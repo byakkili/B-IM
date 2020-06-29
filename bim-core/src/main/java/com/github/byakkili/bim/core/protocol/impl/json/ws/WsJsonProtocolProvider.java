@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.core.protocol.impl.json.ws;
 
-import com.github.byakkili.bim.core.protocol.BaseWsProtocolProvider;
+import com.github.byakkili.bim.core.protocol.impl.BaseWsProtocolProvider;
 import com.github.byakkili.bim.core.protocol.CmdMsgHandler;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsgEncoder;
 import io.netty.channel.ChannelHandler;

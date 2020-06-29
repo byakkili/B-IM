@@ -2,7 +2,7 @@ package com.github.byakkili.bim.demo.config;
 
 import com.github.byakkili.bim.core.cluster.ClusterHandler;
 import com.github.byakkili.bim.core.cluster.ClusterManager;
-import com.github.byakkili.bim.core.cluster.redisson.RedissonClusterManager;
+import com.github.byakkili.bim.core.cluster.impl.redis.RedissonClusterManager;
 import com.github.byakkili.bim.core.protocol.impl.json.tcp.TcpJsonProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.ws.WsJsonProtocolProvider;
 import org.redisson.api.RTopic;

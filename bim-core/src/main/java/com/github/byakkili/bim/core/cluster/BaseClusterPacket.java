@@ -22,7 +22,7 @@ public abstract class BaseClusterPacket implements Serializable {
     /**
      * 服务器ID
      */
-    private String fromServerId = SERVER_ID;
+    private final String fromServerId = SERVER_ID;
     /**
      * 数据
      */
