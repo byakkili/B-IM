@@ -1,28 +1,28 @@
 {
   "groups": [
     {
-      "sourceType": "com.github.byakkili.bim.autoconfigure.BimProperties",
+      "sourceType": "com.github.byakkili.bim.spring.BimProperties",
       "name": "bim",
-      "type": "com.github.byakkili.bim.autoconfigure.BimProperties"
+      "type": "com.github.byakkili.bim.spring.BimProperties"
     }
   ],
   "properties": [
     {
-      "sourceType": "com.github.byakkili.bim.autoconfigure.BimProperties",
+      "sourceType": "com.github.byakkili.bim.spring.BimProperties",
       "name": "bim.port",
       "type": "java.lang.Integer",
       "defaultValue": 9000,
       "description": "Port number."
     },
     {
-      "sourceType": "com.github.byakkili.bim.autoconfigure.BimProperties",
+      "sourceType": "com.github.byakkili.bim.spring.BimProperties",
       "name": "bim.reader-timeout",
       "type": "java.lang.Integer",
       "defaultValue": 60,
       "description": "Channel reader timeout (s)."
     },
     {
-      "sourceType": "com.github.byakkili.bim.autoconfigure.BimProperties",
+      "sourceType": "com.github.byakkili.bim.spring.BimProperties",
       "name": "bim.writer-timeout",
       "type": "java.lang.Integer",
       "defaultValue": 0,

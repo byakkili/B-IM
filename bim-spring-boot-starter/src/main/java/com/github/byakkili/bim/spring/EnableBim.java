@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.autoconfigure;
+package com.github.byakkili.bim.spring;
 
 import org.springframework.context.annotation.Import;
 

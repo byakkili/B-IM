@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.autoconfigure;
+package com.github.byakkili.bim.spring;
 
 import cn.hutool.core.collection.CollUtil;
 import com.github.byakkili.bim.core.BimConfiguration;
