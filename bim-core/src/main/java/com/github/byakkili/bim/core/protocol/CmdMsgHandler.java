@@ -5,10 +5,9 @@ import com.github.byakkili.bim.core.BimContext;
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
-import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -35,12 +34,10 @@ public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFram
     protected final void decode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
-        SessionListener sessionListener = context.getSessionListener();
         Map<Integer, CmdHandler> cmdHandlers = context.getCmdHandlers();
 
-        if (sessionListener != null) {
-            sessionListener.onRead(frame, session);
-        }
+        // 会话监听器
+        context.getSessionListeners().forEach(listener -> listener.onRead(frame, session));
 
         RuntimeException tmpEx = null;
         Object respMsg = null;
@@ -71,11 +68,10 @@ public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFram
     protected final void encode(ChannelHandlerContext ctx, CmdMsgFrame frame, List<Object> list) {
         BimSession session = BimSessionUtils.get(ctx.channel());
         BimContext context = session.getContext();
-        SessionListener sessionListener = context.getSessionListener();
 
-        if (sessionListener != null) {
-            sessionListener.onWrite(frame, session);
-        }
+        // 会话监听器
+        context.getSessionListeners().forEach(listener -> listener.onWrite(frame, session));
+
         list.add(frame);
     }
 

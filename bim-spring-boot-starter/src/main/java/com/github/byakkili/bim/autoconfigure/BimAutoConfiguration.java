@@ -27,9 +27,9 @@ public class BimAutoConfiguration {
     @Autowired(required = false)
     private ClusterManager clusterManager;
     @Autowired(required = false)
-    private SessionListener sessionListener;
-    @Autowired(required = false)
     private List<CmdInterceptor> cmdInterceptors;
+    @Autowired(required = false)
+    private List<SessionListener> sessionListeners;
 
     @Bean
     public BimConfiguration configuration(List<CmdHandler> cmdHandlers, List<ProtocolProvider> protocolProviders) {
@@ -38,11 +38,12 @@ public class BimAutoConfiguration {
         config.setReaderTimeout(properties.getReaderTimeout());
         config.setWriterTimeout(properties.getWriterTimeout());
         config.setClusterManager(clusterManager);
-        config.setSessionListener(sessionListener);
 
-        CollUtil.emptyIfNull(cmdHandlers).forEach(config::addCmdHandler);
-        CollUtil.emptyIfNull(cmdInterceptors).forEach(config::addCmdInterceptors);
-        CollUtil.emptyIfNull(protocolProviders).forEach(config::addProtocolProvider);
+        cmdHandlers.forEach(config::addCmdHandler);
+        protocolProviders.forEach(config::addProtocolProvider);
+
+        CollUtil.emptyIfNull(cmdInterceptors).forEach(config::addCmdInterceptor);
+        CollUtil.emptyIfNull(sessionListeners).forEach(config::addSessionListener);
 
         return config;
     }

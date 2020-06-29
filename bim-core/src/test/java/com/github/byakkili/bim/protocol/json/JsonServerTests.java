@@ -45,11 +45,11 @@ public class JsonServerTests {
         config.setPort(port);
         config.setReaderTimeout(30);
         config.setWriterTimeout(30);
-        config.setSessionListener(testListener);
+        config.addSessionListener(testListener);
         config.addProtocolProvider(new WsJsonProtocolProvider());
         config.addProtocolProvider(new TcpJsonProtocolProvider());
         config.addCmdHandler(new TestJsonCmdHandler());
-        config.addCmdInterceptors(testInterceptor);
+        config.addCmdInterceptor(testInterceptor);
 
         // 启动
         bimNettyServer = new BimNettyServer(config);

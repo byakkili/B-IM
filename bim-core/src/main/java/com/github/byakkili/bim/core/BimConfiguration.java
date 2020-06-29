@@ -46,13 +46,13 @@ public class BimConfiguration {
     /**
      * 会话监听器
      */
-    private SessionListener sessionListener;
+    private final List<SessionListener> sessionListeners = new CopyOnWriteArrayList<>();
     /**
      * 命令拦截器
      */
     private final List<CmdInterceptor> cmdInterceptors = new CopyOnWriteArrayList<>();
     /**
-     * 协议提供者列表
+     * 协议提供者
      */
     private final Set<ProtocolProvider> protocolProviders = new ConcurrentHashSet<>();
     /**
@@ -61,13 +61,23 @@ public class BimConfiguration {
     private final Map<Integer, CmdHandler> cmdHandlers = new ConcurrentHashMap<>();
 
     /**
+     * 添加会话监听器
+     *
+     * @param sessionListener 会话监听器
+     */
+    public void addSessionListener(SessionListener sessionListener) {
+        sessionListeners.add(sessionListener);
+        LOGGER.info("Session listener: {}", sessionListeners.toString());
+    }
+
+    /**
      * 添加命令拦截器
      *
      * @param cmdInterceptor 命令拦截器
      */
-    public void addCmdInterceptors(CmdInterceptor cmdInterceptor) {
+    public void addCmdInterceptor(CmdInterceptor cmdInterceptor) {
         cmdInterceptors.add(cmdInterceptor);
-        LOGGER.info("Cmd Interceptor: {}", cmdInterceptor.toString());
+        LOGGER.info("Cmd interceptor: {}", cmdInterceptor.toString());
     }
 
     /**
@@ -111,8 +121,9 @@ public class BimConfiguration {
      */
     BimConfiguration(BimConfiguration config) {
         BeanUtil.copyProperties(config, this);
-        this.protocolProviders.addAll(config.getProtocolProviders());
         this.cmdHandlers.putAll(config.getCmdHandlers());
         this.cmdInterceptors.addAll(config.getCmdInterceptors());
+        this.sessionListeners.addAll(config.getSessionListeners());
+        this.protocolProviders.addAll(config.getProtocolProviders());
     }
 }

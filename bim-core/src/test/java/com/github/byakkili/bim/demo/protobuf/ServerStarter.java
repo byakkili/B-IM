@@ -19,9 +19,9 @@ public class ServerStarter {
         config.setPort(PORT);
         config.setReaderTimeout(30);
         config.setWriterTimeout(30);
-        config.setSessionListener(new TestSessionListener());
+        config.addSessionListener(new TestSessionListener());
 
-        config.addCmdInterceptors(new TestInterceptor());
+        config.addCmdInterceptor(new TestInterceptor());
         config.addProtocolProvider(new WsProtobufProtocolProvider());
         config.addProtocolProvider(new TcpProtobufProtocolProvider());
         config.addCmdHandler(new TestHandler());
