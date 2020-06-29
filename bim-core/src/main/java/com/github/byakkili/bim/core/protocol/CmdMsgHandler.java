@@ -7,8 +7,8 @@ import com.github.byakkili.bim.core.cmd.CmdHandler;
 import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
 import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.handler.codec.MessageToMessageCodec;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-@ChannelHandler.Sharable
+@Sharable
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFrame> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CmdMsgHandler.class);
@@ -108,9 +108,9 @@ public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFram
     private void applyPostHandle(int cmd, Object msg, BimSession session) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
-            for (CmdInterceptor interceptor : interceptors) {
+            for (int i = interceptors.size() - 1; i >= 0; i--) {
                 try {
-                    interceptor.postHandle(cmd, msg, session);
+                    interceptors.get(i).postHandle(cmd, msg, session);
                 } catch (Exception e) {
                     LOGGER.error("CmdInterceptor.postHandle throw exception", e);
                 }
@@ -128,9 +128,9 @@ public class CmdMsgHandler extends MessageToMessageCodec<CmdMsgFrame, CmdMsgFram
     private void triggerAfterCompletion(int cmd, BimSession session, RuntimeException e) {
         List<CmdInterceptor> interceptors = session.getContext().getCmdInterceptors();
         if (CollUtil.isNotEmpty(interceptors)) {
-            for (CmdInterceptor interceptor : interceptors) {
+            for (int i = interceptors.size() - 1; i >= 0; i--) {
                 try {
-                    interceptor.afterCompletion(cmd, session, e);
+                    interceptors.get(i).afterCompletion(cmd, session, e);
                 } catch (RuntimeException re) {
                     LOGGER.error("CmdInterceptor.afterCompletion throw exception", re);
                 }
