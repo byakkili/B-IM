@@ -1,14 +1,14 @@
 package com.github.byakkili.bim.core.util;
 
-import com.github.byakkili.bim.core.json.TestJsonCmdHandler;
-import com.github.byakkili.bim.core.json.TestJsonMsg;
+import com.github.byakkili.bim.core.server.json.TestJsonCmdHandler;
+import com.github.byakkili.bim.core.server.json.TestJsonMsg;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Guannian Li
  */
-public class CmdHandlerUtilsTest {
+public class CmdHandlerUtilsTests {
     @Test
     public void getMsgClass() {
         TestJsonCmdHandler cmdHandler = new TestJsonCmdHandler();

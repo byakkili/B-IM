@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-public class JsonUtilsTest {
+public class JsonUtilsTests {
     @Test
     public void stringify() {
         Map<String, String> map = new LinkedHashMap<>();

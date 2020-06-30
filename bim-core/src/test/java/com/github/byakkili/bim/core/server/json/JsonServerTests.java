@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.json;
+package com.github.byakkili.bim.core.server.json;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.net.LocalPortGenerater;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @author Guannian Li
  */
 @Slf4j
-public class JsonServerTest {
+public class JsonServerTests {
     private int port;
     private TestJsonListener testListener;
     private TestJsonInterceptor testInterceptor;

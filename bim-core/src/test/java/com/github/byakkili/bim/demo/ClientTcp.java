@@ -1,6 +1,5 @@
 package com.github.byakkili.bim.demo;
 
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.io.IoUtil;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.tcp.TcpProtobufPacket;
 import com.github.byakkili.bim.protobuf.Packet.Chat;
@@ -40,27 +39,10 @@ public class ClientTcp {
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", jsonFormat.printToString(sendChat));
 
-            byte[] receiveBytes = readBytes(inputStream);
+            byte[] receiveBytes = IoUtil.readBytes(inputStream, 1000);
             TcpProtobufPacket receivePacket = TcpProtobufPacket.parse(receiveBytes);
             Chat receiveChat = Chat.parseFrom(receivePacket.getData());
             log.info("Receive: {}", jsonFormat.printToString(receiveChat));
         }
-    }
-
-    private static byte[] readBytes(InputStream in) {
-        try {
-            byte[] b = new byte[200];
-            int readLength = in.read(b);
-            if (readLength > 0 && readLength < b.length) {
-                byte[] b2 = new byte[readLength];
-                System.arraycopy(b, 0, b2, 0, readLength);
-                return b2;
-            } else {
-                return b;
-            }
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-
     }
 }

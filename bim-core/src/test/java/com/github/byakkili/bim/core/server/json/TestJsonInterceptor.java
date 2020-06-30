@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.json;
+package com.github.byakkili.bim.core.server.json;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;

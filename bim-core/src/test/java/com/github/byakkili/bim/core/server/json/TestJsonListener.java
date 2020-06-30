@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.core.json;
+package com.github.byakkili.bim.core.server.json;
 
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.listener.SessionListener;
