@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @author Guannian Li
  */
 @Slf4j
-public class JsonServerTests {
+public class JsonServerTest {
     private int port;
     private TestJsonListener testListener;
     private TestJsonInterceptor testInterceptor;

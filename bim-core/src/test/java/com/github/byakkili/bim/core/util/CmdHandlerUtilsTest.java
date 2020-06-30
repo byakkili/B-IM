@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * @author Guannian Li
  */
-public class CmdHandlerUtilsTests {
+public class CmdHandlerUtilsTest {
     @Test
     public void getMsgClass() {
         TestJsonCmdHandler cmdHandler = new TestJsonCmdHandler();

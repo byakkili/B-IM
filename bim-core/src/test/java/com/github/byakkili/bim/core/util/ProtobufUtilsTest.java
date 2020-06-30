@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * @author Guannian Li
  */
-public class ProtobufUtilsTests {
+public class ProtobufUtilsTest {
     private Chat chat = Chat.newBuilder().setSeq(1).setTo("1").setContent("Hello World!").setChatType(ChatType.PRIVATE).setMsgType(MsgType.TEXT).setCmd(Command.CHAT).build();
     private Chat chat2 = Chat.newBuilder().setSeq(2).setTo("2").setContent("Hello World!").setChatType(ChatType.PRIVATE).setMsgType(MsgType.TEXT).setCmd(Command.CHAT).build();
 
