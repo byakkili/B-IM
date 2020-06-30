@@ -1,4 +1,4 @@
-package com.github.byakkili.bim.spring;
+package com.github.byakkili.bim.autoconfigure;
 
 import lombok.Getter;
 import lombok.Setter;
