@@ -11,11 +11,14 @@ if [ ! -n "$1" ]; then
     exit
 fi
 
-# 替换所有模块pom.xml中的版本
-mvn versions:set -DnewVersion=$1
+# 版本
+version=$1
 
-# 不带-SNAPSHOT的版本号，用于替换其它地方
-version=${1%}
+# 项目路径
+projectPath=$(dirname $(readlink -f "$0"))/..
+
+# 替换所有模块pom.xml中的版本
+mvn versions:set -DnewVersion=$version -f $projectPath/pom.xml
 
 # 替换其它地方的版本
-$(pwd)/bin/replaceVersion.sh "$version"
+$projectPath/bin/replaceVersion.sh "$version"
