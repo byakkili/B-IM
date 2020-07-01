@@ -89,3 +89,9 @@ public class ServerStarter {
     }
 }
 ```
+
+## DEMO
+    1、下载本工程代码
+    2、进入目录B-IM\bim-spring-boot-starter\src\test\resources, 修改配置文件application.yml、redisson.yml
+    3、运行B-IM\bim-spring-boot-starter\src\test\java\com\github\byakkili\bim\demo\JsonApplication.java的main方法
+    4、双击打开B-IM\bim-spring-boot-starter\src\test\resources\index.html即可(可打开多个窗口进行聊天)
