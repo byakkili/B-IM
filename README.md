@@ -8,8 +8,8 @@
     <a target="_blank" href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">
         <img src="https://img.shields.io/badge/JDK-1.8+-green.svg" />
     </a>
-    <a target="_blank" href="https://www.codacy.com/manual/byakkili/B-IM?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=byakkili/B-IM&amp;utm_campaign=Badge_Grade">
-        <img src="https://app.codacy.com/project/badge/Grade/1fac4395e26241eba4d028771115be70" />
+    <a target="_blank" href="https://app.codacy.com/manual/byakkili/B-IM?utm_source=github.com&utm_medium=referral&utm_content=byakkili/B-IM&utm_campaign=Badge_Grade_Dashboard">
+        <img src="https://api.codacy.com/project/badge/Grade/23f223e1ee194b48ab61bfd37e63f6ae" />
     </a>
 </p>
 
@@ -72,14 +72,14 @@ public class ServerStarter {
         config.setPort(9000); // 端口
         config.setReaderTimeout(30); // 读超时30秒
         config.setWriterTimeout(30); // 写超时30秒
-        config.setSessionListener(new TestSessionListener()); // 设置会话监听器
         
         // 添加协议提供者
         config.addProtocolProvider(new WsProtobufProtocolProvider());
         config.addProtocolProvider(new TcpProtobufProtocolProvider()); 
         
         config.addCmdHandler(new TestHandler()); // 添加命令处理器
-        config.addCmdInterceptors(new TestInterceptor()); // 添加命令拦截器
+        config.addCmdInterceptor(new TestInterceptor()); // 添加命令拦截器
+        config.addSessionListener(new TestSessionListener()); // 设置会话监听器
         
         BimNettyServer bimNettyServer = new BimNettyServer(config);
         
