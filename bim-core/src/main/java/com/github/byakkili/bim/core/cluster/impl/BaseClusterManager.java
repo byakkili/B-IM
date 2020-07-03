@@ -33,7 +33,7 @@ public abstract class BaseClusterManager implements ClusterManager {
      */
     public void addClusterHandler(ClusterHandler clusterHandler) {
         if (clusterHandler != null) {
-            getClusterHandlers().put(clusterHandler.packetClass().getName(), clusterHandler);
+            clusterHandlers.put(clusterHandler.packetClass().getName(), clusterHandler);
         }
     }
 

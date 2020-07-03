@@ -3,7 +3,7 @@ package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.JsonUtils;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class TcpJsonPacket implements Serializable {
      */
     private final byte[] data;
 
-    public TcpJsonPacket(CmdMsgFrame<JsonMsg> frame) {
+    public TcpJsonPacket(CommandFrame<JsonMsg> frame) {
         this(frame.getMsg());
     }
 

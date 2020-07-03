@@ -2,7 +2,6 @@ package com.github.byakkili.bim.core.cluster;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -12,7 +11,6 @@ import java.util.UUID;
  */
 @Setter
 @Getter
-@ToString
 public abstract class BaseClusterPacket implements Serializable {
     private static final long serialVersionUID = 1L;
     /**

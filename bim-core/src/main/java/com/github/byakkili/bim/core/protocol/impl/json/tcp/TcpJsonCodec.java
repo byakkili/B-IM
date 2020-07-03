@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCodec;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
@@ -34,7 +34,7 @@ public class TcpJsonCodec extends BaseJsonCodec<ByteBuf> {
         byte[] bytes = ByteBufUtil.getBytes(byteBuf);
         Map jsonMap = JsonUtils.deserialize(bytes, Map.class);
 
-        CmdMsgFrame<JsonMsg> frame = decodeToFrame(session, jsonMap);
+        CommandFrame<JsonMsg> frame = decodeToFrame(session, jsonMap);
 
         if (frame != null) {
             out.add(frame);
@@ -42,7 +42,7 @@ public class TcpJsonCodec extends BaseJsonCodec<ByteBuf> {
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, CmdMsgFrame<JsonMsg> frame, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, CommandFrame<JsonMsg> frame, List<Object> out) throws Exception {
         TcpJsonPacket packet = new TcpJsonPacket(frame);
         byte[] bytes = packet.toByteArray();
 

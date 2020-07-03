@@ -1,9 +1,11 @@
 package com.github.byakkili.bim.core.listener;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 
 /**
+ * 会话监听器
+ *
  * @author Guannian Li
  */
 public interface SessionListener {
@@ -49,7 +51,7 @@ public interface SessionListener {
      * @param msg     消息
      * @param session 会话
      */
-    default void onRead(CmdMsgFrame msg, BimSession session) {
+    default void onRead(CommandFrame msg, BimSession session) {
         // ignore
     }
 
@@ -59,7 +61,7 @@ public interface SessionListener {
      * @param msg     消息
      * @param session 会话
      */
-    default void onWrite(CmdMsgFrame msg, BimSession session) {
+    default void onWrite(CommandFrame msg, BimSession session) {
         // ignore
     }
 }

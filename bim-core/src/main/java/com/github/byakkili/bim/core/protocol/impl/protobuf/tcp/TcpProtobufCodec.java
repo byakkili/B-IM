@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.protobuf.tcp;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.BaseProtobufCodec;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
 import com.google.protobuf.Message;
@@ -28,15 +28,15 @@ public class TcpProtobufCodec extends BaseProtobufCodec<ByteBuf> {
     protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> out) throws Exception {
         BimSession session = BimSessionUtils.get(ctx.channel());
 
-        CmdMsgFrame<Message> cmdMsgFrame = decodeToFrame(session, byteBuf);
+        CommandFrame<Message> commandFrame = decodeToFrame(session, byteBuf);
 
-        if (cmdMsgFrame != null) {
-            out.add(cmdMsgFrame);
+        if (commandFrame != null) {
+            out.add(commandFrame);
         }
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, CmdMsgFrame<Message> frame, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, CommandFrame<Message> frame, List<Object> out) throws Exception {
         TcpProtobufPacket packet = new TcpProtobufPacket(frame);
         byte[] bytes = packet.toByteArray();
 

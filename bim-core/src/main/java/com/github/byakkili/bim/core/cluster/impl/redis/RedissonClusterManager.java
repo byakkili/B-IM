@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RedissonClusterManager extends BaseClusterManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(RedissonClusterManager.class);
-    /**
-     * rTopic
-     */
+
     private RTopic rTopic;
 
     public RedissonClusterManager(RTopic rTopic) {

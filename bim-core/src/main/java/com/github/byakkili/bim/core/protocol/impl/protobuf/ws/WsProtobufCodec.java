@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.protobuf.ws;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.github.byakkili.bim.core.protocol.impl.protobuf.BaseProtobufCodec;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
 import com.github.byakkili.bim.core.util.ProtobufUtils;
@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * +--------+----------+
- * |  CMD   | protobuf |
+ * |  指令  | protobuf |
  * +--------+----------+
  * | 4 byte |  n byte  |
  * +--------+----------+
@@ -36,21 +36,21 @@ public class WsProtobufCodec extends BaseProtobufCodec<BinaryWebSocketFrame> {
     protected void decode(ChannelHandlerContext ctx, BinaryWebSocketFrame binaryWsFrame, List<Object> out) {
         BimSession session = BimSessionUtils.get(ctx.channel());
 
-        CmdMsgFrame<Message> cmdMsgFrame = decodeToFrame(session, binaryWsFrame.content());
+        CommandFrame<Message> commandFrame = decodeToFrame(session, binaryWsFrame.content());
 
-        if (cmdMsgFrame != null) {
-            out.add(cmdMsgFrame);
+        if (commandFrame != null) {
+            out.add(commandFrame);
         }
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, CmdMsgFrame<Message> frame, List<Object> out) throws Exception {
-        Integer cmd = frame.getCmd();
+    protected void encode(ChannelHandlerContext ctx, CommandFrame<Message> frame, List<Object> out) throws Exception {
+        Integer command = frame.getCommand();
         Message msg = frame.getMsg();
         byte[] data = ProtobufUtils.serialize(msg);
 
         ByteBuf byteBuf = ctx.alloc().heapBuffer();
-        byteBuf.writeInt(cmd);
+        byteBuf.writeInt(command);
         byteBuf.writeBytes(data);
 
         BinaryWebSocketFrame binaryWsFrame = new BinaryWebSocketFrame(byteBuf);

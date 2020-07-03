@@ -16,9 +16,9 @@ import lombok.Setter;
 public class AckMsg implements JsonMsg {
     private static final long serialVersionUID = 1L;
     /**
-     * CMD
+     * 指令
      */
-    private Integer cmd;
+    private Integer command;
     /**
      * 序列号
      */

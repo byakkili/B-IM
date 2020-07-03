@@ -1,13 +1,13 @@
-package com.github.byakkili.bim.demo.cmd.auth;
+package com.github.byakkili.bim.demo.command.auth;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCmdHandler;
+import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCommandHandler;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.constant.GlobalConst;
-import com.github.byakkili.bim.demo.constant.Cmd;
+import com.github.byakkili.bim.demo.constant.Command;
 import com.github.byakkili.bim.demo.dto.AckMsg;
 import com.github.byakkili.bim.demo.util.NameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @author Guannian Li
  */
 @Component
-public class AuthCmdHandler extends BaseJsonCmdHandler<AuthReqMsg> {
+public class AuthCommandHandler extends BaseJsonCommandHandler<AuthReqMsg> {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -26,7 +26,7 @@ public class AuthCmdHandler extends BaseJsonCmdHandler<AuthReqMsg> {
     public JsonMsg handle(AuthReqMsg reqMsg, BimSession session) {
         // 验证Token不能为空
         if (StrUtil.isBlank(reqMsg.getToken())) {
-            session.writeAndFlush(new AckMsg(Cmd.AUTH_RESP, reqMsg.getSeq(), -1, "Token不能为空"));
+            session.writeAndFlush(new AckMsg(Command.AUTH_RESP, reqMsg.getSeq(), -1, "Token不能为空"));
             return null;
         }
 
@@ -43,12 +43,12 @@ public class AuthCmdHandler extends BaseJsonCmdHandler<AuthReqMsg> {
         session.setAttribute("isLogin", true);
         // 绑定会话
         session.bind();
-        return new AckMsg(Cmd.AUTH_RESP, reqMsg.getSeq(), 0, "登录成功");
+        return new AckMsg(Command.AUTH_RESP, reqMsg.getSeq(), 0, "登录成功");
     }
 
     @Override
-    public int cmd() {
-        return Cmd.AUTH_REQ;
+    public int command() {
+        return Command.AUTH_REQ;
     }
 
 }

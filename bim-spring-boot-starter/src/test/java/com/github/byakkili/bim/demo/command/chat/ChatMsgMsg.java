@@ -1,7 +1,7 @@
-package com.github.byakkili.bim.demo.cmd.chat;
+package com.github.byakkili.bim.demo.command.chat;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.github.byakkili.bim.demo.constant.Cmd;
+import com.github.byakkili.bim.demo.constant.Command;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,9 +15,9 @@ import lombok.ToString;
 public class ChatMsgMsg extends ChatReqMsg {
     private static final long serialVersionUID = 1L;
     /**
-     * CMD
+     * 指令
      */
-    private final Integer cmd = Cmd.CHAT_MSG;
+    private final Integer command = Command.CHAT_MSG;
     /**
      * 来源用户Id
      */

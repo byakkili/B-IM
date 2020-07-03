@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
+ * 指令帧
+ *
  * @author Guannian Li
  */
 @Getter
 @AllArgsConstructor
-public class CmdMsgFrame<T> {
+public class CommandFrame<T> {
     /**
-     * CMD
+     * 指令
      */
-    private final Integer cmd;
+    private final Integer command;
     /**
      * Msg
      */

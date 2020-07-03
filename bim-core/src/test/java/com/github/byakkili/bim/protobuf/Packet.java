@@ -395,15 +395,15 @@ public final class Packet {
         getContentBytes();
 
     /**
-     * <code>.Command cmd = 4;</code>
-     * @return The enum numeric value on the wire for cmd.
+     * <code>.Command command = 4;</code>
+     * @return The enum numeric value on the wire for command.
      */
-    int getCmdValue();
+    int getCommandValue();
     /**
-     * <code>.Command cmd = 4;</code>
-     * @return The cmd.
+     * <code>.Command command = 4;</code>
+     * @return The command.
      */
-    com.github.byakkili.bim.protobuf.Packet.Command getCmd();
+    com.github.byakkili.bim.protobuf.Packet.Command getCommand();
 
     /**
      * <code>.MsgType msgType = 5;</code>
@@ -446,7 +446,7 @@ public final class Packet {
     private Chat() {
       to_ = "";
       content_ = "";
-      cmd_ = 0;
+      command_ = 0;
       msgType_ = 0;
       chatType_ = 0;
     }
@@ -501,7 +501,7 @@ public final class Packet {
             case 32: {
               int rawValue = input.readEnum();
 
-              cmd_ = rawValue;
+              command_ = rawValue;
               break;
             }
             case 40: {
@@ -634,22 +634,22 @@ public final class Packet {
       }
     }
 
-    public static final int CMD_FIELD_NUMBER = 4;
-    private int cmd_;
+    public static final int COMMAND_FIELD_NUMBER = 4;
+    private int command_;
     /**
-     * <code>.Command cmd = 4;</code>
-     * @return The enum numeric value on the wire for cmd.
+     * <code>.Command command = 4;</code>
+     * @return The enum numeric value on the wire for command.
      */
-    public int getCmdValue() {
-      return cmd_;
+    public int getCommandValue() {
+      return command_;
     }
     /**
-     * <code>.Command cmd = 4;</code>
-     * @return The cmd.
+     * <code>.Command command = 4;</code>
+     * @return The command.
      */
-    public com.github.byakkili.bim.protobuf.Packet.Command getCmd() {
+    public com.github.byakkili.bim.protobuf.Packet.Command getCommand() {
       @SuppressWarnings("deprecation")
-      com.github.byakkili.bim.protobuf.Packet.Command result = com.github.byakkili.bim.protobuf.Packet.Command.valueOf(cmd_);
+      com.github.byakkili.bim.protobuf.Packet.Command result = com.github.byakkili.bim.protobuf.Packet.Command.valueOf(command_);
       return result == null ? com.github.byakkili.bim.protobuf.Packet.Command.UNRECOGNIZED : result;
     }
 
@@ -714,8 +714,8 @@ public final class Packet {
       if (!getContentBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, content_);
       }
-      if (cmd_ != com.github.byakkili.bim.protobuf.Packet.Command.CHAT.getNumber()) {
-        output.writeEnum(4, cmd_);
+      if (command_ != com.github.byakkili.bim.protobuf.Packet.Command.CHAT.getNumber()) {
+        output.writeEnum(4, command_);
       }
       if (msgType_ != com.github.byakkili.bim.protobuf.Packet.MsgType.TEXT.getNumber()) {
         output.writeEnum(5, msgType_);
@@ -742,9 +742,9 @@ public final class Packet {
       if (!getContentBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, content_);
       }
-      if (cmd_ != com.github.byakkili.bim.protobuf.Packet.Command.CHAT.getNumber()) {
+      if (command_ != com.github.byakkili.bim.protobuf.Packet.Command.CHAT.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, cmd_);
+          .computeEnumSize(4, command_);
       }
       if (msgType_ != com.github.byakkili.bim.protobuf.Packet.MsgType.TEXT.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
@@ -775,7 +775,7 @@ public final class Packet {
           .equals(other.getTo())) return false;
       if (!getContent()
           .equals(other.getContent())) return false;
-      if (cmd_ != other.cmd_) return false;
+      if (command_ != other.command_) return false;
       if (msgType_ != other.msgType_) return false;
       if (chatType_ != other.chatType_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -796,8 +796,8 @@ public final class Packet {
       hash = (53 * hash) + getTo().hashCode();
       hash = (37 * hash) + CONTENT_FIELD_NUMBER;
       hash = (53 * hash) + getContent().hashCode();
-      hash = (37 * hash) + CMD_FIELD_NUMBER;
-      hash = (53 * hash) + cmd_;
+      hash = (37 * hash) + COMMAND_FIELD_NUMBER;
+      hash = (53 * hash) + command_;
       hash = (37 * hash) + MSGTYPE_FIELD_NUMBER;
       hash = (53 * hash) + msgType_;
       hash = (37 * hash) + CHATTYPE_FIELD_NUMBER;
@@ -945,7 +945,7 @@ public final class Packet {
 
         content_ = "";
 
-        cmd_ = 0;
+        command_ = 0;
 
         msgType_ = 0;
 
@@ -980,7 +980,7 @@ public final class Packet {
         result.seq_ = seq_;
         result.to_ = to_;
         result.content_ = content_;
-        result.cmd_ = cmd_;
+        result.command_ = command_;
         result.msgType_ = msgType_;
         result.chatType_ = chatType_;
         onBuilt();
@@ -1042,8 +1042,8 @@ public final class Packet {
           content_ = other.content_;
           onChanged();
         }
-        if (other.cmd_ != 0) {
-          setCmdValue(other.getCmdValue());
+        if (other.command_ != 0) {
+          setCommandValue(other.getCommandValue());
         }
         if (other.msgType_ != 0) {
           setMsgTypeValue(other.getMsgTypeValue());
@@ -1274,54 +1274,54 @@ public final class Packet {
         return this;
       }
 
-      private int cmd_ = 0;
+      private int command_ = 0;
       /**
-       * <code>.Command cmd = 4;</code>
-       * @return The enum numeric value on the wire for cmd.
+       * <code>.Command command = 4;</code>
+       * @return The enum numeric value on the wire for command.
        */
-      public int getCmdValue() {
-        return cmd_;
+      public int getCommandValue() {
+        return command_;
       }
       /**
-       * <code>.Command cmd = 4;</code>
-       * @param value The enum numeric value on the wire for cmd to set.
+       * <code>.Command command = 4;</code>
+       * @param value The enum numeric value on the wire for command to set.
        * @return This builder for chaining.
        */
-      public Builder setCmdValue(int value) {
-        cmd_ = value;
+      public Builder setCommandValue(int value) {
+        command_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>.Command cmd = 4;</code>
-       * @return The cmd.
+       * <code>.Command command = 4;</code>
+       * @return The command.
        */
-      public com.github.byakkili.bim.protobuf.Packet.Command getCmd() {
+      public com.github.byakkili.bim.protobuf.Packet.Command getCommand() {
         @SuppressWarnings("deprecation")
-        com.github.byakkili.bim.protobuf.Packet.Command result = com.github.byakkili.bim.protobuf.Packet.Command.valueOf(cmd_);
+        com.github.byakkili.bim.protobuf.Packet.Command result = com.github.byakkili.bim.protobuf.Packet.Command.valueOf(command_);
         return result == null ? com.github.byakkili.bim.protobuf.Packet.Command.UNRECOGNIZED : result;
       }
       /**
-       * <code>.Command cmd = 4;</code>
-       * @param value The cmd to set.
+       * <code>.Command command = 4;</code>
+       * @param value The command to set.
        * @return This builder for chaining.
        */
-      public Builder setCmd(com.github.byakkili.bim.protobuf.Packet.Command value) {
+      public Builder setCommand(com.github.byakkili.bim.protobuf.Packet.Command value) {
         if (value == null) {
           throw new NullPointerException();
         }
         
-        cmd_ = value.getNumber();
+        command_ = value.getNumber();
         onChanged();
         return this;
       }
       /**
-       * <code>.Command cmd = 4;</code>
+       * <code>.Command command = 4;</code>
        * @return This builder for chaining.
        */
-      public Builder clearCmd() {
+      public Builder clearCommand() {
         
-        cmd_ = 0;
+        command_ = 0;
         onChanged();
         return this;
       }
@@ -1497,14 +1497,14 @@ public final class Packet {
   static {
     java.lang.String[] descriptorData = {
       "\n-com/github/byakkili/bim/protobuf/Packe" +
-      "t.proto\"\177\n\004Chat\022\013\n\003seq\030\001 \001(\003\022\n\n\002to\030\002 \001(\t" +
-      "\022\017\n\007content\030\003 \001(\t\022\025\n\003cmd\030\004 \001(\0162\010.Command" +
-      "\022\031\n\007msgType\030\005 \001(\0162\010.MsgType\022\033\n\010chatType\030" +
-      "\006 \001(\0162\t.ChatType*4\n\007MsgType\022\010\n\004TEXT\020\000\022\t\n" +
-      "\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003*\"\n\010ChatTy" +
-      "pe\022\013\n\007PRIVATE\020\000\022\t\n\005GROUP\020\001*!\n\007Command\022\010\n" +
-      "\004CHAT\020\000\022\014\n\010CHAT_ACK\020\001B$\n com.github.byak" +
-      "kili.bim.protobufP\000b\006proto3"
+      "t.proto\"\203\001\n\004Chat\022\013\n\003seq\030\001 \001(\003\022\n\n\002to\030\002 \001(" +
+      "\t\022\017\n\007content\030\003 \001(\t\022\031\n\007command\030\004 \001(\0162\010.Co" +
+      "mmand\022\031\n\007msgType\030\005 \001(\0162\010.MsgType\022\033\n\010chat" +
+      "Type\030\006 \001(\0162\t.ChatType*4\n\007MsgType\022\010\n\004TEXT" +
+      "\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003*\"\n\010C" +
+      "hatType\022\013\n\007PRIVATE\020\000\022\t\n\005GROUP\020\001*!\n\007Comma" +
+      "nd\022\010\n\004CHAT\020\000\022\014\n\010CHAT_ACK\020\001B$\n com.github" +
+      ".byakkili.bim.protobufP\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1515,7 +1515,7 @@ public final class Packet {
     internal_static_Chat_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Chat_descriptor,
-        new java.lang.String[] { "Seq", "To", "Content", "Cmd", "MsgType", "ChatType", });
+        new java.lang.String[] { "Seq", "To", "Content", "Command", "MsgType", "ChatType", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

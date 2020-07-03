@@ -3,7 +3,7 @@ package com.github.byakkili.bim.demo.constant;
 /**
  * @author Guannian Li
  */
-public class Cmd {
+public class Command {
     /** 认证请求 */
     public static final int AUTH_REQ = 1;
     /** 认证响应 */

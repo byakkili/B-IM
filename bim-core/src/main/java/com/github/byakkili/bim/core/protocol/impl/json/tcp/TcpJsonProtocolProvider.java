@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.json.tcp;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.github.byakkili.bim.core.protocol.CmdMsgHandler;
+import com.github.byakkili.bim.core.protocol.CommandCodec;
 import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsgEncoder;
 import io.netty.buffer.ByteBuf;
@@ -41,7 +41,7 @@ public class TcpJsonProtocolProvider implements ProtocolProvider {
                 // 协议1位, 长度4位, Json bytes
                 new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 1, 4, 0, 5),
                 TcpJsonCodec.INSTANCE,
-                CmdMsgHandler.INSTANCE,
+                CommandCodec.INSTANCE,
                 JsonMsgEncoder.INSTANCE
         };
     }

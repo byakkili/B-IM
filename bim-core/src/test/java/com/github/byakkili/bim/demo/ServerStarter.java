@@ -21,10 +21,10 @@ public class ServerStarter {
         config.setWriterTimeout(30);
         config.addSessionListener(new TestSessionListener());
 
-        config.addCmdInterceptor(new TestInterceptor());
+        config.addCommandInterceptor(new TestInterceptor());
         config.addProtocolProvider(new WsProtobufProtocolProvider());
         config.addProtocolProvider(new TcpProtobufProtocolProvider());
-        config.addCmdHandler(new TestHandler());
+        config.addCommandHandler(new TestHandler());
 
         // 启动
         BimNettyServer bimNettyServer = new BimNettyServer(config);

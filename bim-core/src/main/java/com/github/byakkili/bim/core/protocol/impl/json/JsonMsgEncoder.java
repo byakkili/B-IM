@@ -1,6 +1,6 @@
 package com.github.byakkili.bim.core.protocol.impl.json;
 
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
@@ -19,8 +19,8 @@ public class JsonMsgEncoder extends MessageToMessageEncoder<JsonMsg> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, JsonMsg msg, List<Object> out) throws Exception {
-        if (msg.getCmd() != null) {
-            out.add(new CmdMsgFrame<>(msg.getCmd(), msg));
+        if (msg.getCommand() != null) {
+            out.add(new CommandFrame<>(msg.getCommand(), msg));
         }
     }
 }

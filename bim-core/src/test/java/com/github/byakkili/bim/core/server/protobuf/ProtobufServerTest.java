@@ -54,7 +54,7 @@ public class ProtobufServerTest {
         config.setWriterTimeout(30);
         config.addProtocolProvider(new WsProtobufProtocolProvider());
         config.addProtocolProvider(new TcpProtobufProtocolProvider());
-        config.addCmdHandler(new TestProtobufCmdHandler());
+        config.addCommandHandler(new TestProtobufCommandHandler());
 
         // 启动
         bimNettyServer = new BimNettyServer(config);
@@ -66,7 +66,7 @@ public class ProtobufServerTest {
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         final Chat[] sendAndReceive = {Chat.newBuilder()
-                .setCmd(Command.CHAT)
+                .setCommand(Command.CHAT)
                 .setSeq(999)
                 .setTo("张三")
                 .setContent("你好")
@@ -88,7 +88,7 @@ public class ProtobufServerTest {
             @Override
             @SneakyThrows
             public void onMessage(ByteBuffer bytes) {
-                int cmd = NumberUtil.toInt(readBytes(bytes, 4));
+                int command = NumberUtil.toInt(readBytes(bytes, 4));
                 byte[] chatBytes = readBytes(bytes);
                 sendAndReceive[1] = Chat.parseFrom(chatBytes);
                 log.info("Receive: {}", jsonFormat.printToString(sendAndReceive[1]));
@@ -107,12 +107,12 @@ public class ProtobufServerTest {
         };
         wsClient.connectBlocking(5, TimeUnit.SECONDS);
 
-        wsClient.send(ArrayUtil.addAll(NumberUtil.toBytes(sendAndReceive[0].getCmdValue()), sendAndReceive[0].toByteArray()));
+        wsClient.send(ArrayUtil.addAll(NumberUtil.toBytes(sendAndReceive[0].getCommandValue()), sendAndReceive[0].toByteArray()));
         log.info("Send: {}", jsonFormat.printToString(sendAndReceive[0]));
 
         countDownLatch.await(5, TimeUnit.SECONDS);
 
-        Assert.assertEquals(Command.CHAT_ACK, sendAndReceive[1].getCmd());
+        Assert.assertEquals(Command.CHAT_ACK, sendAndReceive[1].getCommand());
         Assert.assertEquals(sendAndReceive[0].getSeq(), sendAndReceive[1].getSeq());
         Assert.assertEquals(sendAndReceive[0].getTo(), sendAndReceive[1].getTo());
         Assert.assertEquals(sendAndReceive[0].getContent() + ": 已收到", sendAndReceive[1].getContent());
@@ -130,14 +130,14 @@ public class ProtobufServerTest {
                 OutputStream outputStream = socket.getOutputStream()
         ) {
             Chat sendChat = Chat.newBuilder()
-                    .setCmd(Command.CHAT)
+                    .setCommand(Command.CHAT)
                     .setSeq(999)
                     .setTo("张三")
                     .setContent("你好")
                     .setChatType(ChatType.GROUP)
                     .setMsgType(MsgType.VIDEO)
                     .build();
-            TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCmdValue(), sendChat.toByteArray());
+            TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCommandValue(), sendChat.toByteArray());
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", jsonFormat.printToString(sendChat));
 
@@ -146,7 +146,7 @@ public class ProtobufServerTest {
             Chat receiveChat = Chat.parseFrom(receivePacket.getData());
             log.info("Receive: {}", jsonFormat.printToString(receiveChat));
 
-            Assert.assertEquals(Command.CHAT_ACK, receiveChat.getCmd());
+            Assert.assertEquals(Command.CHAT_ACK, receiveChat.getCommand());
             Assert.assertEquals(sendChat.getSeq(), receiveChat.getSeq());
             Assert.assertEquals(sendChat.getTo(), receiveChat.getTo());
             Assert.assertEquals(sendChat.getContent() + ": 已收到", receiveChat.getContent());

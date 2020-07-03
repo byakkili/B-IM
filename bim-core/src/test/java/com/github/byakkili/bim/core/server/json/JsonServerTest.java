@@ -48,8 +48,8 @@ public class JsonServerTest {
         config.addSessionListener(testListener);
         config.addProtocolProvider(new WsJsonProtocolProvider());
         config.addProtocolProvider(new TcpJsonProtocolProvider());
-        config.addCmdHandler(new TestJsonCmdHandler());
-        config.addCmdInterceptor(testInterceptor);
+        config.addCommandHandler(new TestJsonCommandHandler());
+        config.addCommandInterceptor(testInterceptor);
 
         // 启动
         bimNettyServer = new BimNettyServer(config);
@@ -58,7 +58,7 @@ public class JsonServerTest {
 
     @Test
     public void ws() throws Exception {
-        final TestJsonMsg[] sendAndReceive = {new TestJsonMsg(TestJsonCmdHandler.CMD, 99L, "Hello, testing!"), null};
+        final TestJsonMsg[] sendAndReceive = {new TestJsonMsg(TestJsonCommandHandler.COMMAND, 99L, "Hello, testing!"), null};
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -93,7 +93,7 @@ public class JsonServerTest {
 
         countDownLatch.await(5, TimeUnit.SECONDS);
 
-        Assert.assertEquals(TestJsonCmdHandler.CMD_ACK, sendAndReceive[1].getCmd());
+        Assert.assertEquals(TestJsonCommandHandler.COMMAND_ACK, sendAndReceive[1].getCommand());
         Assert.assertEquals(sendAndReceive[0].getSeq(), sendAndReceive[1].getSeq());
         Assert.assertEquals(sendAndReceive[0].getContent(), sendAndReceive[1].getContent());
 
@@ -112,7 +112,7 @@ public class JsonServerTest {
                 InputStream inputStream = socket.getInputStream();
                 OutputStream outputStream = socket.getOutputStream()
         ) {
-            TestJsonMsg sendMsg = new TestJsonMsg(TestJsonCmdHandler.CMD, 99L, "Hello, testing!");
+            TestJsonMsg sendMsg = new TestJsonMsg(TestJsonCommandHandler.COMMAND, 99L, "Hello, testing!");
             TcpJsonPacket sendPacket = new TcpJsonPacket(sendMsg);
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", JsonUtils.stringify(sendMsg));
@@ -122,7 +122,7 @@ public class JsonServerTest {
             TestJsonMsg receiveMsg = JsonUtils.deserialize(receivePacket.getData(), TestJsonMsg.class);
             log.info("Receive: {}", JsonUtils.stringify(receiveMsg));
 
-            Assert.assertEquals(TestJsonCmdHandler.CMD_ACK, receiveMsg.getCmd());
+            Assert.assertEquals(TestJsonCommandHandler.COMMAND_ACK, receiveMsg.getCommand());
             Assert.assertEquals(sendMsg.getSeq(), receiveMsg.getSeq());
             Assert.assertEquals(sendMsg.getContent(), receiveMsg.getContent());
         }
@@ -140,7 +140,7 @@ public class JsonServerTest {
                 InputStream inputStream = socket.getInputStream();
                 OutputStream outputStream = socket.getOutputStream()
         ) {
-            TestJsonMsg sendMsg = new TestJsonMsg(TestJsonInterceptor.NO_ALLOW_CMD, 99L, "Hello, testing!");
+            TestJsonMsg sendMsg = new TestJsonMsg(TestJsonInterceptor.NO_ALLOW_COMMAND, 99L, "Hello, testing!");
             TcpJsonPacket sendPacket = new TcpJsonPacket(sendMsg);
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", JsonUtils.stringify(sendMsg));

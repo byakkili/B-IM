@@ -9,12 +9,12 @@ public interface JsonMsg extends Serializable {
     /**
      * 字段名
      */
-    String CMD_FIELD = "cmd";
+    String COMMAND_FIELD = "command";
 
     /**
-     * Command
+     * 指令
      *
-     * @return CMD
+     * @return 指令
      */
-    Integer getCmd();
+    Integer getCommand();
 }

@@ -20,7 +20,7 @@ B-IM是用JAVA语言，基于Netty实现的轻量级、高性能的IM即时通�
 
 ## 主要特色
     1、高性能(可支持几十万以上用户同时在线)
-    2、轻量，拓展性高(提供丰富的API: 会话监听器、命令拦截器、自定义命令、自定义协议...)
+    2、轻量，拓展性高(提供丰富的API: 会话监听器、指令拦截器、自定义指令、自定义协议...)
     3、支持集群部署(默认提供redisson实现)
     4、可支持JSON、Protobuf消息格式(默认提供实现，可根据需要自行拓展)
 
@@ -77,8 +77,8 @@ public class ServerStarter {
         config.addProtocolProvider(new WsProtobufProtocolProvider());
         config.addProtocolProvider(new TcpProtobufProtocolProvider()); 
         
-        config.addCmdHandler(new TestHandler()); // 添加命令处理器
-        config.addCmdInterceptor(new TestInterceptor()); // 添加命令拦截器
+        config.addCommandHandler(new TestHandler()); // 添加指令处理器
+        config.addCommandInterceptor(new TestInterceptor()); // 添加指令拦截器
         config.addSessionListener(new TestSessionListener()); // 设置会话监听器
         
         BimNettyServer bimNettyServer = new BimNettyServer(config);

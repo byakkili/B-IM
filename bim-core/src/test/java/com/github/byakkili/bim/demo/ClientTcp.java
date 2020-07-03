@@ -28,14 +28,14 @@ public class ClientTcp {
                 OutputStream outputStream = socket.getOutputStream()
         ) {
             Chat sendChat = Chat.newBuilder()
-                    .setCmd(Command.CHAT)
+                    .setCommand(Command.CHAT)
                     .setSeq(999)
                     .setTo("张三")
                     .setContent("你好")
                     .setChatType(ChatType.GROUP)
                     .setMsgType(MsgType.VIDEO)
                     .build();
-            TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCmdValue(), sendChat.toByteArray());
+            TcpProtobufPacket sendPacket = new TcpProtobufPacket(sendChat.getCommandValue(), sendChat.toByteArray());
             IoUtil.write(outputStream, false, sendPacket.toByteArray());
             log.info("Send: {}", jsonFormat.printToString(sendChat));
 

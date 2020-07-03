@@ -10,6 +10,8 @@ import lombok.Setter;
 import java.util.Set;
 
 /**
+ * 会话
+ *
  * @author Guannian Li
  */
 @Setter

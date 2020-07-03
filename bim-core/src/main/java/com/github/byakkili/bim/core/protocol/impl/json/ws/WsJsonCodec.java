@@ -1,7 +1,7 @@
 package com.github.byakkili.bim.core.protocol.impl.json.ws;
 
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCodec;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.core.util.BimSessionUtils;
@@ -32,7 +32,7 @@ public class WsJsonCodec extends BaseJsonCodec<TextWebSocketFrame> {
 
         Map jsonMap = JsonUtils.parse(textWsFrame.text(), Map.class);
 
-        CmdMsgFrame<JsonMsg> frame = decodeToFrame(session, jsonMap);
+        CommandFrame<JsonMsg> frame = decodeToFrame(session, jsonMap);
 
         if (frame != null) {
             out.add(frame);
@@ -40,7 +40,7 @@ public class WsJsonCodec extends BaseJsonCodec<TextWebSocketFrame> {
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, CmdMsgFrame<JsonMsg> frame, List<Object> out) {
+    protected void encode(ChannelHandlerContext ctx, CommandFrame<JsonMsg> frame, List<Object> out) {
         JsonMsg jsonMsg = frame.getMsg();
         String jsonStr = JsonUtils.stringify(jsonMsg);
 

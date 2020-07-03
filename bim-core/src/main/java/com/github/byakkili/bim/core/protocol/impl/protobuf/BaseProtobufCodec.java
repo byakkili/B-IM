@@ -2,9 +2,9 @@ package com.github.byakkili.bim.core.protocol.impl.protobuf;
 
 import com.github.byakkili.bim.core.BimContext;
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.cmd.CmdHandler;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
-import com.github.byakkili.bim.core.util.CmdHandlerUtils;
+import com.github.byakkili.bim.core.command.CommandHandler;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
+import com.github.byakkili.bim.core.util.CommandHandlerUtils;
 import com.github.byakkili.bim.core.util.ProtobufUtils;
 import com.google.protobuf.Message;
 import io.netty.buffer.ByteBuf;
@@ -16,20 +16,20 @@ import java.util.Map;
 /**
  * @author Guannian Li
  */
-public abstract class BaseProtobufCodec<T> extends MessageToMessageCodec<T, CmdMsgFrame<Message>> {
+public abstract class BaseProtobufCodec<T> extends MessageToMessageCodec<T, CommandFrame<Message>> {
 
-    protected CmdMsgFrame<Message> decodeToFrame(BimSession session, ByteBuf byteBuf) {
+    protected CommandFrame<Message> decodeToFrame(BimSession session, ByteBuf byteBuf) {
         BimContext context = session.getContext();
-        Map<Integer, CmdHandler> cmdHandlers = context.getCmdHandlers();
+        Map<Integer, CommandHandler> commandHandlers = context.getCommandHandlers();
 
-        int cmd = byteBuf.readInt();
-        CmdHandler cmdHandler = cmdHandlers.get(cmd);
-        if (cmdHandler == null) {
-            return new CmdMsgFrame<>(cmd, null);
+        int command = byteBuf.readInt();
+        CommandHandler commandHandler = commandHandlers.get(command);
+        if (commandHandler == null) {
+            return new CommandFrame<>(command, null);
         }
         byte[] bytes = ByteBufUtil.getBytes(byteBuf);
-        Class<Message> msgClass = CmdHandlerUtils.getMsgClass(cmdHandler);
+        Class<Message> msgClass = CommandHandlerUtils.getMsgClass(commandHandler);
         Message message = ProtobufUtils.deserialize(bytes, msgClass);
-        return new CmdMsgFrame<>(cmd, message);
+        return new CommandFrame<>(command, message);
     }
 }

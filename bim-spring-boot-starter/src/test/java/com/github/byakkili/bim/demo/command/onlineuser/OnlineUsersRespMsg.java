@@ -1,8 +1,8 @@
-package com.github.byakkili.bim.demo.cmd.onlineuser;
+package com.github.byakkili.bim.demo.command.onlineuser;
 
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.dto.UserInfo;
-import com.github.byakkili.bim.demo.constant.Cmd;
+import com.github.byakkili.bim.demo.constant.Command;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +20,9 @@ import java.util.List;
 public class OnlineUsersRespMsg implements JsonMsg {
     private static final long serialVersionUID = 1L;
     /**
-     * cmd
+     * command
      */
-    private final Integer cmd = Cmd.ONLINE_USERS_RESP;
+    private final Integer command = Command.ONLINE_USERS_RESP;
     /**
      * 序列号
      */

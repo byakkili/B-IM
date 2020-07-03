@@ -1,10 +1,10 @@
-package com.github.byakkili.bim.demo.cmd.onlineuser;
+package com.github.byakkili.bim.demo.command.onlineuser;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.github.byakkili.bim.core.BimSession;
-import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCmdHandler;
+import com.github.byakkili.bim.core.protocol.impl.json.BaseJsonCommandHandler;
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
-import com.github.byakkili.bim.demo.constant.Cmd;
+import com.github.byakkili.bim.demo.constant.Command;
 import com.github.byakkili.bim.demo.constant.GlobalConst;
 import com.github.byakkili.bim.demo.dto.SimpleMsg;
 import com.github.byakkili.bim.demo.dto.UserInfo;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Guannian Li
  */
 @Component
-public class OnlineUsersHandler extends BaseJsonCmdHandler<SimpleMsg> {
+public class OnlineUsersHandler extends BaseJsonCommandHandler<SimpleMsg> {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -39,7 +39,7 @@ public class OnlineUsersHandler extends BaseJsonCmdHandler<SimpleMsg> {
     }
 
     @Override
-    public int cmd() {
-        return Cmd.ONLINE_USERS_REQ;
+    public int command() {
+        return Command.ONLINE_USERS_REQ;
     }
 }

@@ -44,7 +44,7 @@ public class ClientWs {
              @Override
              @SneakyThrows
              public void onMessage(ByteBuffer bytes) {
-                 int cmd = NumberUtil.toInt(readBytes(bytes, 4));
+                 int command = NumberUtil.toInt(readBytes(bytes, 4));
                  byte[] chatBytes = readBytes(bytes);
                  Chat receiveChat = Chat.parseFrom(chatBytes);
                  log.info("Receive: {}", jsonFormat.printToString(receiveChat));
@@ -64,14 +64,14 @@ public class ClientWs {
          wsClient.connectBlocking(5, TimeUnit.SECONDS);
 
          Chat sendChat = Chat.newBuilder()
-                 .setCmd(Command.CHAT)
+                 .setCommand(Command.CHAT)
                  .setSeq(999)
                  .setTo("张三")
                  .setContent("你好")
                  .setChatType(ChatType.GROUP)
                  .setMsgType(MsgType.VIDEO)
                  .build();
-         wsClient.send(ArrayUtil.addAll(NumberUtil.toBytes(sendChat.getCmdValue()), sendChat.toByteArray()));
+         wsClient.send(ArrayUtil.addAll(NumberUtil.toBytes(sendChat.getCommandValue()), sendChat.toByteArray()));
          log.info("Send: {}", jsonFormat.printToString(sendChat));
 
          countDownLatch.await(5, TimeUnit.SECONDS);

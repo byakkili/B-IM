@@ -3,8 +3,8 @@ package com.github.byakkili.bim.core;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import com.github.byakkili.bim.core.cluster.ClusterManager;
-import com.github.byakkili.bim.core.cmd.CmdHandler;
-import com.github.byakkili.bim.core.interceptor.CmdInterceptor;
+import com.github.byakkili.bim.core.command.CommandHandler;
+import com.github.byakkili.bim.core.interceptor.CommandInterceptor;
 import com.github.byakkili.bim.core.listener.SessionListener;
 import com.github.byakkili.bim.core.protocol.ProtocolProvider;
 import lombok.Getter;
@@ -48,17 +48,17 @@ public class BimConfiguration {
      */
     private final List<SessionListener> sessionListeners = new CopyOnWriteArrayList<>();
     /**
-     * 命令拦截器
+     * 指令拦截器
      */
-    private final List<CmdInterceptor> cmdInterceptors = new CopyOnWriteArrayList<>();
+    private final List<CommandInterceptor> commandInterceptors = new CopyOnWriteArrayList<>();
     /**
      * 协议提供者
      */
     private final Set<ProtocolProvider> protocolProviders = new ConcurrentHashSet<>();
     /**
-     * cmd处理器
+     * 指令处理器
      */
-    private final Map<Integer, CmdHandler> cmdHandlers = new ConcurrentHashMap<>();
+    private final Map<Integer, CommandHandler> commandHandlers = new ConcurrentHashMap<>();
 
     /**
      * 添加会话监听器
@@ -71,13 +71,13 @@ public class BimConfiguration {
     }
 
     /**
-     * 添加命令拦截器
+     * 添加指令拦截器
      *
-     * @param cmdInterceptor 命令拦截器
+     * @param commandInterceptor 指令拦截器
      */
-    public void addCmdInterceptor(CmdInterceptor cmdInterceptor) {
-        cmdInterceptors.add(cmdInterceptor);
-        LOGGER.info("Cmd interceptor: {}", cmdInterceptor.toString());
+    public void addCommandInterceptor(CommandInterceptor commandInterceptor) {
+        commandInterceptors.add(commandInterceptor);
+        LOGGER.info("Command interceptor: {}", commandInterceptor.toString());
     }
 
     /**
@@ -91,18 +91,17 @@ public class BimConfiguration {
     }
 
     /**
-     * 添加cmd处理器
+     * 添加指令处理器
      *
-     * @param cmdHandler cmd处理器
+     * @param commandHandler 指令处理器
      */
-    public void addCmdHandler(CmdHandler cmdHandler) {
-        int cmd = cmdHandler.cmd();
-        if (cmdHandlers.containsKey(cmd)) {
-            throw new IllegalArgumentException("Cmd already exists");
-        } else {
-            cmdHandlers.put(cmd, cmdHandler);
-            LOGGER.info("Cmd Handler: {} -> {}", cmd, cmdHandler.toString());
+    public void addCommandHandler(CommandHandler commandHandler) {
+        int command = commandHandler.command();
+        if (commandHandlers.containsKey(command)) {
+            throw new IllegalArgumentException("Command already exists");
         }
+        commandHandlers.put(command, commandHandler);
+        LOGGER.info("Command Handler: {} -> {}", command, commandHandler.toString());
     }
 
     /**
@@ -121,8 +120,8 @@ public class BimConfiguration {
      */
     BimConfiguration(BimConfiguration config) {
         BeanUtil.copyProperties(config, this);
-        this.cmdHandlers.putAll(config.getCmdHandlers());
-        this.cmdInterceptors.addAll(config.getCmdInterceptors());
+        this.commandHandlers.putAll(config.getCommandHandlers());
+        this.commandInterceptors.addAll(config.getCommandInterceptors());
         this.sessionListeners.addAll(config.getSessionListeners());
         this.protocolProviders.addAll(config.getProtocolProviders());
     }

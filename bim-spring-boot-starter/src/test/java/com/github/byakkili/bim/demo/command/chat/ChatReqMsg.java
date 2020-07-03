@@ -1,8 +1,8 @@
-package com.github.byakkili.bim.demo.cmd.chat;
+package com.github.byakkili.bim.demo.command.chat;
 
 import com.github.byakkili.bim.core.protocol.impl.json.JsonMsg;
 import com.github.byakkili.bim.demo.constant.ChatMsgType;
-import com.github.byakkili.bim.demo.constant.Cmd;
+import com.github.byakkili.bim.demo.constant.Command;
 import com.github.byakkili.bim.demo.constant.ChatType;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +17,9 @@ import lombok.ToString;
 public class ChatReqMsg implements JsonMsg {
     private static final long serialVersionUID = 1L;
     /**
-     * CMD
+     * 指令
      */
-    private final Integer cmd = Cmd.CHAT_REQ;
+    private final Integer command = Command.CHAT_REQ;
     /**
      * 序列号
      */

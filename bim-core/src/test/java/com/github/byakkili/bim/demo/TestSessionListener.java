@@ -2,7 +2,7 @@ package com.github.byakkili.bim.demo;
 
 import com.github.byakkili.bim.core.BimSession;
 import com.github.byakkili.bim.core.listener.SessionListener;
-import com.github.byakkili.bim.core.protocol.CmdMsgFrame;
+import com.github.byakkili.bim.core.protocol.CommandFrame;
 import com.google.protobuf.Message;
 import com.googlecode.protobuf.format.JsonFormat;
 import lombok.extern.slf4j.Slf4j;
@@ -37,16 +37,16 @@ public class TestSessionListener implements SessionListener {
     }
 
     @Override
-    public void onRead(CmdMsgFrame frame, BimSession session) {
+    public void onRead(CommandFrame frame, BimSession session) {
         if (frame.getMsg() instanceof Message) {
-            log.info("会话: {}, 请求 -> cmd: {}, data: {}", session.getId(), frame.getCmd(), jsonFormat.printToString((Message) frame.getMsg()));
+            log.info("会话: {}, 请求 -> command: {}, data: {}", session.getId(), frame.getCommand(), jsonFormat.printToString((Message) frame.getMsg()));
         }
     }
 
     @Override
-    public void onWrite(CmdMsgFrame frame, BimSession session) {
+    public void onWrite(CommandFrame frame, BimSession session) {
         if (frame.getMsg() instanceof Message) {
-            log.info("会话: {}, 响应 -> cmd: {}, data: {}", session.getId(), frame.getCmd(), jsonFormat.printToString((Message) frame.getMsg()));
+            log.info("会话: {}, 响应 -> command: {}, data: {}", session.getId(), frame.getCommand(), jsonFormat.printToString((Message) frame.getMsg()));
         }
     }
 }

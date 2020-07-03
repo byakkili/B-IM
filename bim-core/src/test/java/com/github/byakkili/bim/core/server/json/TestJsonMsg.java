@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestJsonMsg implements JsonMsg {
-    private Integer cmd;
+    private Integer command;
     private Long seq;
     private String content;
 }
